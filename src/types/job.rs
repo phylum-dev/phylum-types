@@ -4,6 +4,15 @@ use super::common::*;
 use super::package::*;
 use super::project::*;
 
+/// If
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Action {
+    None,
+    Warn,
+    Break,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct JobDescriptor {
     pub job_id: JobId,
@@ -56,7 +65,7 @@ pub struct AllJobsStatusResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct RequestStatusResponse<T> {
+pub struct JobStatusResponse<T> {
     pub job_id: JobId,
     pub ecosystem: String,
     pub user_id: UserId,
@@ -79,12 +88,6 @@ pub struct RequestStatusResponse<T> {
 
 /// DELETE /request/packages/<job_id>
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CancelRequestResponse {
+pub struct CancelJobResponse {
     pub msg: String,
-}
-
-/// GET /job/<job_id>
-#[derive(Debug, Serialize, Deserialize)]
-pub struct StatusRequest {
-    job_id: JobId,
 }

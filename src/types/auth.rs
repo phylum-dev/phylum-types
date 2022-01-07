@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// Typed wrapper for AuthorizationCode
+/// Typed wrapper for AuthorizationCode as used in OAuth login flow with PKCE
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct AuthorizationCode(String);
 
@@ -70,6 +70,9 @@ impl From<&IdToken> for String {
     }
 }
 
+/// Represents a response from a OAuth server containing
+/// refresh and access tokens obtained from the final stage
+/// of the OAuth login flow with PKCE
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct TokenResponse {
     pub access_token: AccessToken,
@@ -79,6 +82,9 @@ pub struct TokenResponse {
     pub expires_in_seconds: u32,
 }
 
+/// Reprsents a refresh token response from a OAuth server after
+/// a request was made to obtain a new Access Token using the current
+/// Refresh Token
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct AccessTokenResponse {
     pub access_token: AccessToken,
