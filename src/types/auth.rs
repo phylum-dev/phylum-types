@@ -1,3 +1,5 @@
+//! This module contains types involved in handling authentication.
+
 use serde::{Deserialize, Serialize};
 
 /// Typed wrapper for AuthorizationCode as used in OAuth login flow with PKCE

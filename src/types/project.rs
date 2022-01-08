@@ -1,17 +1,11 @@
+//! This module contains types for working with project data
+
 use serde::{Deserialize, Serialize};
 
 use super::common::ProjectId;
 use super::job::*;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct Projecct {
-    pub score: u32,
-    pub passing: bool,
-    pub name: String,
-    pub id: ProjectId,
-    pub last_updated: u64,
-}
-
+/// Rick cut off thresholds for a project
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProjectThresholds {
     pub author: f32,
@@ -22,39 +16,39 @@ pub struct ProjectThresholds {
     pub vulnerability: f32,
 }
 
-/// GET /projects/overview
+/// Summary response for a project
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectGetRequest {
+pub struct ProjectSummaryResponse {
+    /// The project name
     pub name: String,
+    /// The project id
     pub id: String,
+    /// When the project was updated
+    // TODO Fix, make consistent with other timestamps in the api
     pub updated_at: String,
     /* TODO: Need to update request manager to include thresholds with this
      *       response.
      *pub thresholds: ProjectThresholds, */
 }
 
+/// A more detailed project response
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectGetResponse {
-    pub id: ProjectId,
-}
-
-/// GET /projects/<project-id>
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectGetDetailsRequest {
+pub struct ProjectDetailsResponse {
+    /// The project name
     pub name: String,
+    /// The project id
     pub id: String,
+    /// The project ecosystem / package type
     pub ecosystem: String,
+    /// The configured risk cutoff thresholds for the project
     pub thresholds: ProjectThresholds,
+    /// Most recent analysis job runs
     pub jobs: Vec<JobDescriptor>,
 }
 
-/// PUT /projects
+/// Response of a create project request
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectCreateRequest {
-    pub name: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ProjectCreateResponse {
+pub struct CreateProjectResponse {
+    /// The id of the newly created project
     pub id: ProjectId,
 }

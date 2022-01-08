@@ -1,12 +1,17 @@
+//! This module contains types for manipulating user settings data
+
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-/// PUT /settings/current-user
+/// Threshold for a given risk
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Threshold {
+    // TODO Should this be the Action enum?
     pub action: String,
+    /// Is this threshold active
     pub active: bool,
+    /// The risk threshold cutoff
     pub threshold: f32,
 }
 
@@ -22,6 +27,8 @@ pub enum Setting {
     Project(UserProject),
 }
 
+/// Exposes the user settings most often used by the CLI
+// TODO Unify with API user settings type
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserSettings {
     pub version: u32,
