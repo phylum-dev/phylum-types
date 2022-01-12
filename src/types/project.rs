@@ -46,6 +46,12 @@ pub struct ProjectDetailsResponse {
     pub jobs: Vec<JobDescriptor>,
 }
 
+/// Rquest to create a project
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateProjectRequest {
+    pub name: String,
+}
+
 /// Response of a create project request
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateProjectResponse {

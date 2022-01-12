@@ -39,7 +39,8 @@ pub struct JobDescriptor {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SubmitPackageRequest {
     /// The 'type' of package, NPM, RubyGem, etc
-    pub r#type: PackageType,
+    #[serde(rename = "type")]
+    pub package_type: PackageType,
     /// The subpackage dependencies of this package
     pub packages: Vec<PackageDescriptor>,
     /// Was this submitted by a user interactively and not a CI?
@@ -52,7 +53,7 @@ pub struct SubmitPackageRequest {
 
 /// Initial response after package has been submitted
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PackageSubmissionResponse {
+pub struct SubmitPackageResponse {
     /// The id of the job processing the package
     pub job_id: JobId,
 }
