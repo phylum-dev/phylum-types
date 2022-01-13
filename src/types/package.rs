@@ -206,11 +206,7 @@ pub struct PackageStatusExtended {
     #[serde(rename = "riskVectors")]
     pub risk_vectors: HashMap<String, f64>,
     /// Dependencies of this package
-    pub dependencies: Vec<PackageDescriptor>,
-    /// Vulnerabilities found in this package
-    pub vulnerabilities: Vec<Vulnerability>,
-    /// Results of heuristics run on this package and its dependencies
-    pub heuristics: HashMap<String, HeuristicResult>,
+    pub dependencies: HashMap<String, String>,
     /// Any issues found that may need action, but aren't in and of themselves
     /// vulnerabilities
     pub issues: Vec<Issue>,
