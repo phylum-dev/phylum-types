@@ -52,6 +52,8 @@ pub struct CreateProjectRequest {
     pub name: String,
 }
 
+pub type UpdateProjectRequest = CreateProjectRequest;
+
 /// Response of a create project request
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateProjectResponse {
