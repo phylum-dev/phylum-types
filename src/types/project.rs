@@ -60,3 +60,5 @@ pub struct CreateProjectResponse {
     /// The id of the newly created project
     pub id: ProjectId,
 }
+
+pub type UpdateProjectResponse = CreateProjectResponse;
