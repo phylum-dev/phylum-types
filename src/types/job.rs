@@ -68,6 +68,14 @@ pub struct AllJobsStatusResponse {
     pub count: u32,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum JobStatusResponseVariant {
+    // Serde returns the one that deserializes successfully first, so most complicated goes first
+    Extended(JobStatusResponse<PackageStatusExtended>),
+    Basic(JobStatusResponse<PackageStatus>),
+}
+
 /// Data returned when querying the job status endpoint
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JobStatusResponse<T> {
