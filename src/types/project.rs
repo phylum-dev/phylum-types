@@ -52,9 +52,13 @@ pub struct CreateProjectRequest {
     pub name: String,
 }
 
+pub type UpdateProjectRequest = CreateProjectRequest;
+
 /// Response of a create project request
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateProjectResponse {
     /// The id of the newly created project
     pub id: ProjectId,
 }
+
+pub type UpdateProjectResponse = CreateProjectResponse;
