@@ -15,7 +15,7 @@ use super::common::*;
 pub enum PackageType {
     Npm,
     Python,
-    Java,
+    Maven,
     Ruby,
 }
 
@@ -132,7 +132,7 @@ impl FromStr for PackageType {
         match input.to_lowercase().as_str() {
             "npm" => Ok(Self::Npm),
             "python" => Ok(Self::Python),
-            "java" => Ok(Self::Java),
+            "maven" => Ok(Self::Maven),
             "ruby" => Ok(Self::Ruby),
             _ => Err(()),
         }
@@ -152,7 +152,7 @@ impl PackageType {
             PackageType::Npm => "Javascript",
             PackageType::Ruby => "Ruby",
             PackageType::Python => "Python",
-            PackageType::Java => "Java",
+            PackageType::Maven => "Java",
         }
     }
 }
