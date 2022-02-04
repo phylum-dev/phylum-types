@@ -17,6 +17,7 @@ pub enum PackageType {
     Python,
     Maven,
     Ruby,
+    Nuget,
 }
 
 /// Human friendly risk level buckets
@@ -134,6 +135,7 @@ impl FromStr for PackageType {
             "python" => Ok(Self::Python),
             "maven" => Ok(Self::Maven),
             "ruby" => Ok(Self::Ruby),
+            "nuget" => Ok(Self::Nuget),
             _ => Err(()),
         }
     }
@@ -153,6 +155,7 @@ impl PackageType {
             PackageType::Ruby => "Ruby",
             PackageType::Python => "Python",
             PackageType::Maven => "Java",
+            PackageType::Nuget => ".NET",
         }
     }
 }
