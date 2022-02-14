@@ -1,7 +1,7 @@
 // This is a reference for the Maven project descriptor used in Maven.
 // https://maven.apache.org/ref/3.8.4/maven-model/maven.html
 
-use std::collections::HashMap;
+use std::{collections::HashMap, ops::Deref};
 
 use serde::{Deserialize, Serialize};
 
@@ -56,6 +56,14 @@ pub struct Licenses {
     pub licenses: Vec<License>,
 }
 
+impl Deref for Licenses {
+    type Target = Vec<License>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.licenses
+    }
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub struct License {
     pub name: Option<String>,
@@ -76,10 +84,26 @@ pub struct Developers {
     pub developers: Vec<Person>,
 }
 
+impl Deref for Developers {
+    type Target = Vec<Person>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.developers
+    }
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub struct Contributors {
     #[serde(rename = "contributor", default)]
     pub contributors: Vec<Person>,
+}
+
+impl Deref for Contributors {
+    type Target = Vec<Person>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.contributors
+    }
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
@@ -146,6 +170,14 @@ pub struct Parent {
 pub struct Dependencies {
     #[serde(rename = "dependency", default)]
     pub dependencies: Vec<Dependency>,
+}
+
+impl Deref for Dependencies {
+    type Target = Vec<Dependency>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.dependencies
+    }
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
@@ -258,6 +290,14 @@ pub struct Plugins {
     pub plugins: Vec<Plugin>,
 }
 
+impl Deref for Plugins {
+    type Target = Vec<Plugin>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.plugins
+    }
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub struct PluginManagement {
     pub plugins: Plugins,
@@ -320,6 +360,14 @@ pub struct Extensions {
     pub extensions: Vec<Extension>,
 }
 
+impl Deref for Extensions {
+    type Target = Vec<Extension>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.extensions
+    }
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub struct Extension {
     #[serde(rename = "artifactId")]
@@ -333,6 +381,14 @@ pub struct Extension {
 pub struct Profiles {
     #[serde(rename = "profile", default)]
     pub profiles: Vec<Profile>,
+}
+
+impl Deref for Profiles {
+    type Target = Vec<Profile>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.profiles
+    }
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
