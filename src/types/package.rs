@@ -14,9 +14,9 @@ use super::common::*;
 #[serde(rename_all = "lowercase")]
 pub enum PackageType {
     Npm,
-    Python,
+    PyPi,
     Maven,
-    Ruby,
+    RubyGems,
     Nuget,
 }
 
@@ -132,9 +132,9 @@ impl FromStr for PackageType {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input.to_lowercase().as_str() {
             "npm" => Ok(Self::Npm),
-            "python" => Ok(Self::Python),
+            "python" | "pypi" => Ok(Self::PyPi),
             "maven" => Ok(Self::Maven),
-            "ruby" => Ok(Self::Ruby),
+            "ruby" | "rubygems" => Ok(Self::RubyGems),
             "nuget" => Ok(Self::Nuget),
             _ => Err(()),
         }
@@ -152,8 +152,8 @@ impl PackageType {
     pub fn language(&self) -> &str {
         match self {
             PackageType::Npm => "Javascript",
-            PackageType::Ruby => "Ruby",
-            PackageType::Python => "Python",
+            PackageType::RubyGems => "Ruby",
+            PackageType::PyPi => "Python",
             PackageType::Maven => "Java",
             PackageType::Nuget => ".NET",
         }
