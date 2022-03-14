@@ -1,7 +1,7 @@
 [package]
 name = "phylum_types"
 description = "Common public types shared between the Phylum CLI and API"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2018"
 
 [features]
