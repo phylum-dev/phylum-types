@@ -1,5 +1,7 @@
 //! This module contains types involved in handling authentication.
 
+use core::fmt;
+
 use serde::{Deserialize, Serialize};
 
 /// Typed wrapper for AuthorizationCode as used in OAuth login flow with PKCE
@@ -31,6 +33,12 @@ impl RefreshToken {
 impl From<&RefreshToken> for String {
     fn from(val: &RefreshToken) -> Self {
         val.0.to_owned()
+    }
+}
+
+impl fmt::Display for RefreshToken {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
