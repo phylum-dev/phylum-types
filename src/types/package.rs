@@ -10,7 +10,7 @@ use super::common::*;
 
 /// The package ecosystem
 // TODO Should be Ecosystem?
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum PackageType {
     Npm,
@@ -21,7 +21,7 @@ pub enum PackageType {
 }
 
 /// Human friendly risk level buckets
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, PartialOrd, Ord, Serialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
 pub enum RiskLevel {
     /// Informational, no action needs to be taken
     #[serde(rename = "info")]
@@ -48,7 +48,7 @@ impl fmt::Display for RiskLevel {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
 // TODO Naming here seems inconsisten, some have Risk as a suffix, others don't
 pub enum RiskDomain {
     /// Malicious code such as malware or crypto miners
@@ -83,7 +83,7 @@ impl fmt::Display for RiskDomain {
 }
 
 /// Represents an actionable issue found in a package
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug, Serialize, Deserialize)]
 pub struct Issue {
     /// Name of issue
     pub title: String,
@@ -98,7 +98,7 @@ pub struct Issue {
 }
 
 /// The results of an individual heuristic run
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
 pub struct HeuristicResult {
     /// The risk domain
     pub domain: RiskDomain,
@@ -109,7 +109,7 @@ pub struct HeuristicResult {
 }
 
 /// A vulnerability
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
 pub struct Vulnerability {
     /// If this vulnerability falls into one or more known CVEs
     pub cve: Vec<String>,
@@ -161,7 +161,7 @@ impl PackageType {
 }
 
 /// Describes a package in the system
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct PackageDescriptor {
     pub name: String,
     pub version: String,
@@ -171,7 +171,7 @@ pub struct PackageDescriptor {
 
 /// Basic core package meta data
 // TODO Clearer name
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
 pub struct PackageStatus {
     /// Name of the package
     pub name: String,
@@ -196,7 +196,7 @@ pub struct PackageStatus {
 
 /// Package metadata with extended info info
 // TODO Clearer name
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct PackageStatusExtended {
     #[serde(flatten)]
     pub basic_status: PackageStatus,
