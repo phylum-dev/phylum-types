@@ -7,7 +7,7 @@ use super::common::ProjectId;
 use super::job::*;
 
 /// Rick cut off thresholds for a project
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct ProjectThresholds {
     pub author: f32,
     pub engineering: f32,
@@ -19,7 +19,7 @@ pub struct ProjectThresholds {
 
 /// Summary response for a project
 #[cfg(not(feature = "dev_api_issue_96"))]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct ProjectSummaryResponse {
     /// The project name
     pub name: String,
@@ -34,7 +34,7 @@ pub struct ProjectSummaryResponse {
 
 /// Summary response for a project
 #[cfg(feature = "dev_api_issue_96")]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct ProjectSummaryResponse {
     /// The project name
     pub name: String,
@@ -49,7 +49,7 @@ pub struct ProjectSummaryResponse {
 }
 
 /// A more detailed project response
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
 pub struct ProjectDetailsResponse {
     /// The project name
     pub name: String,
@@ -64,7 +64,7 @@ pub struct ProjectDetailsResponse {
 }
 
 /// Rquest to create a project
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct CreateProjectRequest {
     pub name: String,
 }
@@ -72,7 +72,7 @@ pub struct CreateProjectRequest {
 pub type UpdateProjectRequest = CreateProjectRequest;
 
 /// Response of a create project request
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct CreateProjectResponse {
     /// The id of the newly created project
     pub id: ProjectId,

@@ -1,7 +1,8 @@
 // This is a reference for the Maven project descriptor used in Maven.
 // https://maven.apache.org/ref/3.8.4/maven-model/maven.html
 
-use std::{collections::HashMap, ops::Deref};
+use std::collections::HashMap;
+use std::ops::Deref;
 
 use serde::{Deserialize, Serialize};
 
