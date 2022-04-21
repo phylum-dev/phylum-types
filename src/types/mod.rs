@@ -8,3 +8,4 @@ pub mod job;
 pub mod package;
 pub mod project;
 pub mod user_settings;
+pub mod group;

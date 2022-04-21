@@ -4,13 +4,8 @@ description = "Common public types shared between the Phylum CLI and API"
 version = "0.1.0"
 edition = "2018"
 
-[features]
-dev_api_issue_96 = ["chrono"]
-
 [dependencies]
-chrono = { version = "0.4.11", default-features = true, features = [
-    "serde",
-], optional = true }
+chrono = { version = "0.4.11", default-features = true, features = ["serde"] }
 log = "^0.4.6"
 serde = { version = "^1.0", features = ["derive"] }
 serde_derive = "1.0"
