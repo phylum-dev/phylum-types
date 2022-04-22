@@ -28,8 +28,14 @@ pub struct UserGroup {
     pub last_modified: DateTime<Utc>,
     pub owner_email: String,
     pub group_name: String,
-    pub is_admin: Option<bool>, //only present in the relatively uncommon case that the user is an admin
-    pub is_owner: Option<bool>, //only present in the relatively uncommon case that the user is the owner
+
+    //only present in the relatively uncommon case that the user is an admin
+    #[serde(default)]
+    pub is_admin: bool,
+
+    //only present in the relatively uncommon case that the user is the owner
+    #[serde(default)]
+    pub is_owner: bool,
 }
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
