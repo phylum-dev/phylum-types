@@ -37,13 +37,7 @@ pub struct UserSettings {
 
 impl UserSettings {
     /// Sets the threshold for the given risk domain.
-    pub fn set_threshold(
-        &mut self,
-        project_id: String,
-        name: String,
-        threshold: i32,
-        action: String,
-    ) {
+    pub fn set_threshold(&mut self, project_id: String, name: String, threshold: Threshold) {
         // log::debug!("Retrieving user settings for project: {}", project_id);
         let mut thresholds = self
             .projects
@@ -56,14 +50,7 @@ impl UserSettings {
             });
 
         if let Setting::Project(ref mut t) = thresholds {
-            t.thresholds.insert(
-                name,
-                Threshold {
-                    action,
-                    active: (threshold > 0),
-                    threshold: (threshold as f32) / 100.0,
-                },
-            );
+            t.thresholds.insert(name, threshold);
         }
 
         self.projects.insert(project_id, thresholds);
