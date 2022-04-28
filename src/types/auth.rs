@@ -5,7 +5,7 @@ use core::fmt;
 use serde::{Deserialize, Serialize};
 
 /// Typed wrapper for AuthorizationCode as used in OAuth login flow with PKCE
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
 pub struct AuthorizationCode(String);
 
 impl AuthorizationCode {
@@ -17,6 +17,12 @@ impl AuthorizationCode {
 impl From<&AuthorizationCode> for String {
     fn from(val: &AuthorizationCode) -> Self {
         val.0.to_owned()
+    }
+}
+
+impl fmt::Display for AuthorizationCode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -64,6 +70,12 @@ impl<'a> From<&'a AccessToken> for &'a str {
     }
 }
 
+impl fmt::Display for AccessToken {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 /// Typed wrapper for IdToken
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
 pub struct IdToken(String);
@@ -77,6 +89,12 @@ impl IdToken {
 impl From<&IdToken> for String {
     fn from(val: &IdToken) -> Self {
         val.0.to_owned()
+    }
+}
+
+impl fmt::Display for IdToken {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
