@@ -52,5 +52,5 @@ pub struct GroupMember {
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct ListGroupMembersResponse {
-    pub members: Vec<GroupMember>
+    pub members: Vec<GroupMember>,
 }
