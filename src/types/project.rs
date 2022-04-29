@@ -67,6 +67,7 @@ pub struct ProjectDetailsResponse {
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct CreateProjectRequest {
     pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_name: Option<String>,
 }
 
