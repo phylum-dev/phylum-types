@@ -67,7 +67,7 @@ pub struct ProjectDetailsResponse {
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct CreateProjectRequest {
     pub name: String,
-    pub group_name: Option<String>
+    pub group_name: Option<String>,
 }
 
 pub type UpdateProjectRequest = CreateProjectRequest;
