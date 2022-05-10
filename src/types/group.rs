@@ -13,11 +13,6 @@ pub struct CreateGroupResponse {
 }
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
-pub struct AddUserToGroupRequest {
-    pub user_email: String,
-}
-
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct KickUserFromGroupRequest {
     pub user_email: String,
 }
