@@ -49,6 +49,9 @@ pub struct SubmitPackageRequest {
     pub project: ProjectId,
     /// A label for this package. Often it's the branch.
     pub label: String,
+    /// The group that owns the project, if applicable
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub group_name: Option<String>,
 }
 
 /// Initial response after package has been submitted
