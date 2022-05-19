@@ -53,6 +53,18 @@ pub enum RiskLevel {
     Critical,
 }
 
+impl RiskLevel {
+    pub fn score(&self) -> f32 {
+        match self {
+            RiskLevel::Info => 1.,
+            RiskLevel::Low => 0.8,
+            RiskLevel::Medium => 0.65,
+            RiskLevel::High => 0.35,
+            RiskLevel::Critical => 0.1,
+        }
+    }
+}
+
 impl fmt::Display for RiskLevel {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let risk_level = format!("{:?}", self);
@@ -113,13 +125,24 @@ pub struct ScoredVersion {
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
 pub struct PackageSpecifier {
-    pub registry: PackageType,
+    pub registry: String,
     pub name: String,
     pub version: String,
 }
 
+// TODO Once we unify PackageDescriptor and PackageSpecifier, this goes away
+impl From<&PackageDescriptor> for PackageSpecifier {
+    fn from(descriptor: &PackageDescriptor) -> Self {
+        Self {
+            registry: descriptor.package_type.to_string(),
+            name: descriptor.name.clone(),
+            version: descriptor.version.clone(),
+        }
+    }
+}
+
 /// Risk scores by domain.
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub struct RiskScores {
     pub total: f32,
     pub vulnerability: f32,
@@ -231,7 +254,9 @@ pub struct DeveloperResponsiveness {
 }
 
 /// Count of issues for each severity.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Default, Serialize, Deserialize,
+)]
 #[serde(rename_all = "camelCase")]
 pub struct IssueImpacts {
     pub low: u32,
@@ -240,13 +265,28 @@ pub struct IssueImpacts {
     pub critical: u32,
 }
 
+impl From<&[Issue]> for IssueImpacts {
+    fn from(issues: &[Issue]) -> Self {
+        let mut impacts = IssueImpacts::default();
+        for issue in issues {
+            match issue.severity.score() {
+                score if score >= 0.8 => impacts.low += 1,
+                score if (0.5..0.8).contains(&score) => impacts.medium += 1,
+                score if (0.2..0.5).contains(&score) => impacts.high += 1,
+                _ => impacts.critical += 1,
+            }
+        }
+        impacts
+    }
+}
+
 #[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Package {
     pub id: String,
     pub name: String,
     pub version: String,
-    pub registry: PackageType,
+    pub registry: String,
     pub published_date: Option<String>,
     pub latest_version: Option<String>,
     pub versions: Vec<ScoredVersion>,
