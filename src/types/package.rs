@@ -388,5 +388,91 @@ pub struct PackageStatusExtended {
     pub dependencies: HashMap<String, String>,
     /// Any issues found that may need action, but aren't in and of themselves
     /// vulnerabilities
-    pub issues: Vec<Issue>,
+    pub issues: Vec<deprecated::Issue>,
+}
+
+pub mod deprecated {
+    //! These types are superceded by the new types above, but they are still
+    //! used in the API, so they are included here.
+
+    use std::fmt;
+
+    use serde::{Deserialize, Serialize};
+
+    /// Human friendly risk level buckets
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+    pub enum RiskLevel {
+        /// Informational, no action needs to be taken
+        #[serde(rename = "info")]
+        Info,
+        /// Minor issues like cosmetic code smells
+        #[serde(rename = "low")]
+        /// Possibly a problem in great number or rare circumstances
+        Low,
+        /// May be indicative of overall quality issues
+        #[serde(rename = "medium")]
+        Medium,
+        /// Possibly exploitable behavior in some circumstances
+        #[serde(rename = "high")]
+        High,
+        /// Should fix as soon as possible, may be under active exploitation
+        #[serde(rename = "critical")]
+        Critical,
+    }
+
+    impl fmt::Display for RiskLevel {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            let risk_level = format!("{:?}", self);
+            write!(f, "{}", risk_level.to_lowercase())
+        }
+    }
+
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+    // TODO Naming here seems inconsisten, some have Risk as a suffix, others don't
+    pub enum RiskDomain {
+        /// Malicious code such as malware or crypto miners
+        #[serde(rename = "malicious_code")]
+        MaliciousCode,
+        /// A code vulnerability such as use-after-free or other code smell
+        #[serde(rename = "vulnerability")]
+        Vulnerabilities,
+        /// Poor engineering practices and other code smells
+        #[serde(rename = "engineering")]
+        EngineeringRisk,
+        /// One or more authors is a possible bad actor or other problems
+        #[serde(rename = "author")]
+        AuthorRisk,
+        /// License is unknown, incompatible with the project, etc
+        #[serde(rename = "license")]
+        LicenseRisk,
+    }
+
+    impl fmt::Display for RiskDomain {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            // TODO for a human readable format, do we gain anything with this?
+            let risk_domain = match self {
+                RiskDomain::MaliciousCode => "MAL",
+                RiskDomain::Vulnerabilities => "VLN",
+                RiskDomain::EngineeringRisk => "ENG",
+                RiskDomain::AuthorRisk => "AUT",
+                RiskDomain::LicenseRisk => "LIC",
+            };
+            write!(f, "{}", risk_domain)
+        }
+    }
+
+    /// Represents an actionable issue found in a package
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug, Serialize, Deserialize)]
+    pub struct Issue {
+        /// Name of issue
+        pub title: String,
+        /// Description of Issue and possible remediation steps
+        pub description: String,
+        #[serde(alias = "severity")]
+        /// How risky is it
+        pub risk_level: RiskLevel,
+        /// The domain of the risk
+        #[serde(alias = "domain")]
+        pub risk_domain: RiskDomain,
+    }
 }
