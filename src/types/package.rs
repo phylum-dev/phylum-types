@@ -168,7 +168,9 @@ pub struct Issue {
     pub id: Option<String>,
     pub title: String,
     pub description: String,
+    #[serde(alias = "risk_level")]
     pub severity: RiskLevel,
+    #[serde(alias = "risk_domain")]
     pub domain: RiskDomain,
 }
 
