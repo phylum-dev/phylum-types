@@ -1,5 +1,6 @@
 //! This module contains types involved with handling phylum processing jobs.
 
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::common::*;
@@ -10,7 +11,7 @@ use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExten
 /// level ), what action should be taken?
 /// In the case of the CLI, the value of this result is used to determine if the
 /// CLI should print a warning, or exit with a non-zero exit code.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "lowercase")]
 pub enum Action {
     None,
@@ -19,7 +20,7 @@ pub enum Action {
 }
 
 /// Metadata about a job
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct JobDescriptor {
     pub job_id: JobId,
     pub project: String,
@@ -36,7 +37,7 @@ pub struct JobDescriptor {
 }
 
 /// Submit Package for analysis
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct SubmitPackageRequest {
     /// The 'type' of package, NPM, RubyGem, etc
     #[serde(rename = "type")]
@@ -55,14 +56,14 @@ pub struct SubmitPackageRequest {
 }
 
 /// Initial response after package has been submitted
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct SubmitPackageResponse {
     /// The id of the job processing the package
     pub job_id: JobId,
 }
 
 /// Represents a response that summarizes the output of all current jobs
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct AllJobsStatusResponse {
     /// A description of the latest jobs
     pub jobs: Vec<JobDescriptor>,
@@ -71,7 +72,7 @@ pub struct AllJobsStatusResponse {
     pub count: u32,
 }
 
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum JobStatusResponseVariant {
     // Serde returns the one that deserializes successfully first, so most complicated goes first
@@ -80,7 +81,7 @@ pub enum JobStatusResponseVariant {
 }
 
 /// Data returned when querying the job status endpoint
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct JobStatusResponse<T> {
     /// The id of the job processing the top level package
     pub job_id: JobId,
@@ -121,7 +122,7 @@ pub struct JobStatusResponse<T> {
 }
 
 /// Response from canceling a job
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct CancelJobResponse {
     pub msg: String,
 }
