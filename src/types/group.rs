@@ -2,23 +2,31 @@ use chrono::{DateTime, Utc};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct CreateGroupRequest {
     pub group_name: String,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct CreateGroupResponse {
     pub group_name: String,
     pub owner_email: String,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct KickUserFromGroupRequest {
     pub user_email: String,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct UserGroup {
     pub created_at: DateTime<Utc>,
     pub last_modified: DateTime<Utc>,
@@ -34,19 +42,25 @@ pub struct UserGroup {
     pub is_owner: bool,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct ListUserGroupsResponse {
     pub groups: Vec<UserGroup>,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct GroupMember {
     pub user_email: String,
     pub first_name: String,
     pub last_name: String,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct ListGroupMembersResponse {
     pub members: Vec<GroupMember>,
 }

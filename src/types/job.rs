@@ -11,7 +11,9 @@ use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExten
 /// level ), what action should be taken?
 /// In the case of the CLI, the value of this result is used to determine if the
 /// CLI should print a warning, or exit with a non-zero exit code.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "lowercase")]
 pub enum Action {
     None,
@@ -37,7 +39,9 @@ pub struct JobDescriptor {
 }
 
 /// Submit Package for analysis
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct SubmitPackageRequest {
     /// The 'type' of package, NPM, RubyGem, etc
     #[serde(rename = "type")]
@@ -56,7 +60,9 @@ pub struct SubmitPackageRequest {
 }
 
 /// Initial response after package has been submitted
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct SubmitPackageResponse {
     /// The id of the job processing the package
     pub job_id: JobId,
@@ -122,7 +128,9 @@ pub struct JobStatusResponse<T> {
 }
 
 /// Response from canceling a job
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct CancelJobResponse {
     pub msg: String,
 }

@@ -9,7 +9,9 @@ pub type Key = Uuid;
 pub type PackageId = String;
 
 /// Did the processing of the Package or Job complete successfully
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "lowercase")]
 pub enum Status {
     Complete,
