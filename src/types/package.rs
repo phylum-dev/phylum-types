@@ -5,12 +5,15 @@ use std::fmt;
 use std::str::FromStr;
 
 use chrono::{DateTime, Utc};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::types::common::Status;
 
 /// Risk domains.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[repr(u8)]
 pub enum RiskDomain {
     /// One or more authors is a possible bad actor or other problems
@@ -37,7 +40,9 @@ impl fmt::Display for RiskDomain {
 }
 
 /// Issue severity.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "camelCase")]
 pub enum RiskLevel {
     /// Informational, no action needs to be taken.
@@ -73,7 +78,9 @@ impl fmt::Display for RiskLevel {
 }
 
 /// The package ecosystem
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "lowercase")]
 pub enum PackageType {
     Npm,
@@ -117,13 +124,15 @@ impl fmt::Display for PackageType {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct ScoredVersion {
     pub version: String,
     pub total_risk_score: Option<f32>,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct PackageSpecifier {
     pub registry: String,
     pub name: String,
@@ -142,7 +151,9 @@ impl From<&PackageDescriptor> for PackageSpecifier {
 }
 
 /// Risk scores by domain.
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Default, Serialize, Deserialize)]
+#[derive(
+    PartialEq, PartialOrd, Copy, Clone, Debug, Default, Serialize, Deserialize, JsonSchema,
+)]
 pub struct RiskScores {
     pub total: f32,
     pub vulnerability: f32,
@@ -153,7 +164,7 @@ pub struct RiskScores {
 }
 
 /// Change in score over time.
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct ScoreDynamicsPoint {
     pub date_time: DateTime<Utc>,
@@ -162,7 +173,9 @@ pub struct ScoreDynamicsPoint {
 }
 
 /// A single package issue.
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct Issue {
     pub tag: Option<String>,
     pub id: Option<String>,
@@ -175,7 +188,7 @@ pub struct Issue {
 }
 
 /// Issue description.
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct IssuesListItem {
     pub risk_type: RiskType,
@@ -188,7 +201,9 @@ pub struct IssuesListItem {
     pub ignored: IgnoredReason,
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "camelCase")]
 pub enum RiskType {
     TotalRisk,
@@ -225,7 +240,9 @@ impl fmt::Display for RiskType {
     }
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "camelCase")]
 pub enum IgnoredReason {
     False,
@@ -235,7 +252,9 @@ pub enum IgnoredReason {
 }
 
 /// Author information
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 #[serde(rename_all = "camelCase")]
 pub struct Author {
     pub name: String,
@@ -245,7 +264,9 @@ pub struct Author {
 }
 
 /// Responsiveness of developers
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct DeveloperResponsiveness {
     pub open_issue_count: Option<usize>,
     pub total_issue_count: Option<usize>,
@@ -257,7 +278,18 @@ pub struct DeveloperResponsiveness {
 
 /// Count of issues for each severity.
 #[derive(
-    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Default, Serialize, Deserialize,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Copy,
+    Clone,
+    Debug,
+    Default,
+    Serialize,
+    Deserialize,
+    JsonSchema,
 )]
 #[serde(rename_all = "camelCase")]
 pub struct IssueImpacts {
@@ -282,7 +314,7 @@ impl From<&[Issue]> for IssueImpacts {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Package {
     pub id: String,
@@ -310,7 +342,7 @@ pub struct Package {
 // v--- TODO: OLD PACKAGE RESPONSES ---v //
 
 /// The results of an individual heuristic run
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct HeuristicResult {
     /// The risk domain
     pub domain: RiskDomain,
@@ -321,7 +353,7 @@ pub struct HeuristicResult {
 }
 
 /// A vulnerability
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Vulnerability {
     /// If this vulnerability falls into one or more known CVEs
     pub cve: Vec<String>,
@@ -339,7 +371,9 @@ pub struct Vulnerability {
 }
 
 /// Describes a package in the system
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct PackageDescriptor {
     pub name: String,
     pub version: String,
@@ -349,7 +383,7 @@ pub struct PackageDescriptor {
 
 /// Basic core package meta data
 // TODO Clearer name
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct PackageStatus {
     /// Name of the package
     pub name: String,
@@ -374,7 +408,7 @@ pub struct PackageStatus {
 
 /// Package metadata with extended info info
 // TODO Clearer name
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct PackageStatusExtended {
     #[serde(flatten)]
     pub basic_status: PackageStatus,
