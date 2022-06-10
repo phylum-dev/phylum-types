@@ -120,14 +120,14 @@ pub struct MailingList {
     pub unsubscribe: Option<String>,
     pub post: Option<String>,
     pub archive: Option<String>,
-    #[serde(rename = "otherArchives", default)]
-    pub other_archives: Vec<OtherArchive>,
+    #[serde(rename = "otherArchives")]
+    pub other_archives: Option<OtherArchives>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
-pub struct OtherArchive {
+pub struct OtherArchives {
     #[serde(rename = "otherArchive", default)]
-    pub other_archive: Option<String>,
+    pub other_archive: Vec<String>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
@@ -473,6 +473,7 @@ pub struct IssueManagement {
 pub struct CiManagement {
     pub system: Option<String>,
     pub url: Option<String>,
+    #[serde(default)]
     pub notifiers: Vec<Notifier>,
 }
 
