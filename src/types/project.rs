@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use super::common::ProjectId;
 use super::job::*;
+use super::package::PackageType;
 
 /// Rick cut off thresholds for a project
 #[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -33,6 +34,7 @@ pub struct ProjectSummaryResponse {
     /* TODO: Need to update request manager to include thresholds with this
      *       response.
      *pub thresholds: ProjectThresholds, */
+    pub ecosystem: Option<PackageType>,
 }
 
 /// Summary response for a project
@@ -51,6 +53,7 @@ pub struct ProjectSummaryResponse {
     /* TODO: Need to update request manager to include thresholds with this
      *       response.
      *pub thresholds: ProjectThresholds, */
+    pub ecosystem: Option<PackageType>,
 }
 
 /// A more detailed project response
