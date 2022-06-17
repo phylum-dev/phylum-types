@@ -1,5 +1,4 @@
 //! This module contains types for working with project data
-#[cfg(feature = "dev_api_issue_96")]
 use chrono::{DateTime, Utc};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -20,25 +19,6 @@ pub struct ProjectThresholds {
 }
 
 /// Summary response for a project
-#[cfg(not(feature = "dev_api_issue_96"))]
-#[derive(
-    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
-)]
-pub struct ProjectSummaryResponse {
-    /// The project name
-    pub name: String,
-    /// The project id
-    pub id: String,
-    /// When the project was updated
-    pub updated_at: String,
-    /// The ecosystem of the project; determined by its latest job
-    pub ecosystem: Option<PackageType>,
-    /// The project's group's name, if this is a group project
-    pub group_name: Option<String>,
-}
-
-/// Summary response for a project
-#[cfg(feature = "dev_api_issue_96")]
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
