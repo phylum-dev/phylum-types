@@ -31,10 +31,10 @@ pub struct ProjectSummaryResponse {
     pub id: String,
     /// When the project was updated
     pub updated_at: String,
-    /* TODO: Need to update request manager to include thresholds with this
-     *       response.
-     *pub thresholds: ProjectThresholds, */
+    /// The ecosystem of the project; determined by its latest job
     pub ecosystem: Option<PackageType>,
+    /// The project's group's name, if this is a group project
+    pub group_name: Option<String>,
 }
 
 /// Summary response for a project
@@ -49,11 +49,12 @@ pub struct ProjectSummaryResponse {
     pub id: ProjectId,
     /// When the project was updated
     pub updated_at: DateTime<Utc>,
+    /// When the project was created
     pub created_at: DateTime<Utc>,
-    /* TODO: Need to update request manager to include thresholds with this
-     *       response.
-     *pub thresholds: ProjectThresholds, */
+    /// The ecosystem of the project; determined by its latest job
     pub ecosystem: Option<PackageType>,
+    /// The project's group's name, if this is a group project
+    pub group_name: Option<String>,
 }
 
 /// A more detailed project response
