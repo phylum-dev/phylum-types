@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 
 use super::common::ProjectId;
 use super::job::*;
-use super::package::PackageType;
 
 /// Rick cut off thresholds for a project
 #[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -31,8 +30,6 @@ pub struct ProjectSummaryResponse {
     pub updated_at: DateTime<Utc>,
     /// When the project was created
     pub created_at: DateTime<Utc>,
-    /// The ecosystem of the project; determined by its latest job
-    pub ecosystem: Option<PackageType>,
     /// The project's group's name, if this is a group project
     pub group_name: Option<String>,
 }
