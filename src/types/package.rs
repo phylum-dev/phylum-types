@@ -134,6 +134,7 @@ pub struct ScoredVersion {
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
 pub struct PackageSpecifier {
+    #[serde(alias = "type")]
     pub registry: String,
     pub name: String,
     pub version: String,
@@ -378,6 +379,7 @@ pub struct PackageDescriptor {
     pub name: String,
     pub version: String,
     #[serde(rename = "type")]
+    #[serde(alias = "registry")]
     pub package_type: PackageType,
 }
 
