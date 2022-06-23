@@ -293,6 +293,7 @@ pub struct DeveloperResponsiveness {
     JsonSchema,
 )]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct IssueImpacts {
     pub low: u32,
     pub medium: u32,
@@ -315,8 +316,9 @@ impl From<&[Issue]> for IssueImpacts {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct Package {
     pub id: String,
     pub name: String,
