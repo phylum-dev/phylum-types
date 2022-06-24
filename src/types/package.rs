@@ -134,6 +134,7 @@ pub struct ScoredVersion {
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
 pub struct PackageSpecifier {
+    #[serde(alias = "type")]
     pub registry: String,
     pub name: String,
     pub version: String,
@@ -292,6 +293,7 @@ pub struct DeveloperResponsiveness {
     JsonSchema,
 )]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct IssueImpacts {
     pub low: u32,
     pub medium: u32,
@@ -314,8 +316,9 @@ impl From<&[Issue]> for IssueImpacts {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct Package {
     pub id: String,
     pub name: String,
@@ -378,6 +381,7 @@ pub struct PackageDescriptor {
     pub name: String,
     pub version: String,
     #[serde(rename = "type")]
+    #[serde(alias = "registry")]
     pub package_type: PackageType,
 }
 
