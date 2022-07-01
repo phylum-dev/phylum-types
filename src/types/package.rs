@@ -4,41 +4,70 @@ use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 
+use chrono::{DateTime, Utc};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use super::common::*;
+use crate::types::common::Status;
 
-/// The package ecosystem
-// TODO Should be Ecosystem?
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum PackageType {
-    Npm,
-    PyPi,
-    Maven,
-    RubyGems,
-    Nuget,
+/// Risk domains.
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+#[repr(u8)]
+pub enum RiskDomain {
+    /// One or more authors is a possible bad actor or other problems
+    #[serde(rename = "author")]
+    AuthorRisk = 0,
+    /// Poor engineering practices and other code smells
+    #[serde(rename = "engineering")]
+    EngineeringRisk = 1,
+    /// Malicious code such as malware or crypto miners
+    #[serde(rename = "malicious_code")]
+    MaliciousCode = 2,
+    /// A code vulnerability such as use-after-free or other code smell
+    #[serde(rename = "vulnerability")]
+    Vulnerabilities = 3,
+    /// License is unknown, incompatible with the project, etc
+    #[serde(rename = "license")]
+    LicenseRisk = 4,
 }
 
-/// Human friendly risk level buckets
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+impl fmt::Display for RiskDomain {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        RiskType::from(*self).fmt(f)
+    }
+}
+
+/// Issue severity.
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "camelCase")]
 pub enum RiskLevel {
-    /// Informational, no action needs to be taken
-    #[serde(rename = "info")]
+    /// Informational, no action needs to be taken.
     Info,
-    /// Minor issues like cosmetic code smells
-    #[serde(rename = "low")]
-    /// Possibly a problem in great number or rare circumstances
+    /// Minor issues like cosmetic code smells,
+    /// possibly a problem in great number or rare circumstances.
     Low,
-    /// May be indicative of overall quality issues
-    #[serde(rename = "medium")]
+    /// May be indicative of overall quality issues.
     Medium,
-    /// Possibly exploitable behavior in some circumstances
-    #[serde(rename = "high")]
+    /// Possibly exploitable behavior in some circumstances.
     High,
-    /// Should fix as soon as possible, may be under active exploitation
-    #[serde(rename = "critical")]
+    /// Should fix as soon as possible, may be under active exploitation.
     Critical,
+}
+
+impl RiskLevel {
+    pub fn score(&self) -> f32 {
+        match self {
+            RiskLevel::Info => 1.,
+            RiskLevel::Low => 0.8,
+            RiskLevel::Medium => 0.65,
+            RiskLevel::High => 0.35,
+            RiskLevel::Critical => 0.1,
+        }
+    }
 }
 
 impl fmt::Display for RiskLevel {
@@ -48,82 +77,29 @@ impl fmt::Display for RiskLevel {
     }
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
-// TODO Naming here seems inconsisten, some have Risk as a suffix, others don't
-pub enum RiskDomain {
-    /// Malicious code such as malware or crypto miners
-    #[serde(rename = "malicious_code")]
-    MaliciousCode,
-    /// A code vulnerability such as use-after-free or other code smell
-    #[serde(rename = "vulnerability")]
-    Vulnerabilities,
-    /// Poor engineering practices and other code smells
-    #[serde(rename = "engineering")]
-    EngineeringRisk,
-    /// One or more authors is a possible bad actor or other problems
-    #[serde(rename = "author")]
-    AuthorRisk,
-    /// License is unknown, incompatible with the project, etc
-    #[serde(rename = "license")]
-    LicenseRisk,
+/// The package ecosystem
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "lowercase")]
+pub enum PackageType {
+    Npm,
+    PyPi,
+    Maven,
+    RubyGems,
+    Nuget,
 }
 
-impl fmt::Display for RiskDomain {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // TODO for a human readable format, do we gain anything with this?
-        let risk_domain = match self {
-            RiskDomain::MaliciousCode => "MAL",
-            RiskDomain::Vulnerabilities => "VLN",
-            RiskDomain::EngineeringRisk => "ENG",
-            RiskDomain::AuthorRisk => "AUT",
-            RiskDomain::LicenseRisk => "LIC",
-        };
-        write!(f, "{}", risk_domain)
+impl PackageType {
+    pub fn language(&self) -> &str {
+        match self {
+            PackageType::Npm => "Javascript",
+            PackageType::RubyGems => "Ruby",
+            PackageType::PyPi => "Python",
+            PackageType::Maven => "Java",
+            PackageType::Nuget => ".NET",
+        }
     }
-}
-
-/// Represents an actionable issue found in a package
-#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Debug, Serialize, Deserialize)]
-pub struct Issue {
-    /// Name of issue
-    pub title: String,
-    /// Description of Issue and possible remediation steps
-    pub description: String,
-    #[serde(alias = "severity")]
-    /// How risky is it
-    pub risk_level: RiskLevel,
-    /// The domain of the risk
-    #[serde(alias = "domain")]
-    pub risk_domain: RiskDomain,
-}
-
-/// The results of an individual heuristic run
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
-pub struct HeuristicResult {
-    /// The risk domain
-    pub domain: RiskDomain,
-    /// The score
-    pub score: f64,
-    /// The risk level bucket it falls into
-    pub risk_level: RiskLevel,
-}
-
-/// A vulnerability
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
-pub struct Vulnerability {
-    /// If this vulnerability falls into one or more known CVEs
-    pub cve: Vec<String>,
-    /// Severity of the vulnerability
-    #[serde(rename = "severity")]
-    pub base_severity: f32,
-    /// What risk level bucket it falls into
-    pub risk_level: RiskLevel,
-    /// Title of the vulnerability
-    pub title: String,
-    /// A more in depth description
-    pub description: String,
-    /// Remediation information if known
-    pub remediation: String,
 }
 
 impl FromStr for PackageType {
@@ -148,30 +124,270 @@ impl fmt::Display for PackageType {
     }
 }
 
-impl PackageType {
-    pub fn language(&self) -> &str {
-        match self {
-            PackageType::Npm => "Javascript",
-            PackageType::RubyGems => "Ruby",
-            PackageType::PyPi => "Python",
-            PackageType::Maven => "Java",
-            PackageType::Nuget => ".NET",
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub struct ScoredVersion {
+    pub version: String,
+    pub total_risk_score: Option<f32>,
+}
+
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct PackageSpecifier {
+    #[serde(alias = "type")]
+    pub registry: String,
+    pub name: String,
+    pub version: String,
+}
+
+// TODO Once we unify PackageDescriptor and PackageSpecifier, this goes away
+impl From<&PackageDescriptor> for PackageSpecifier {
+    fn from(descriptor: &PackageDescriptor) -> Self {
+        Self {
+            registry: descriptor.package_type.to_string(),
+            name: descriptor.name.clone(),
+            version: descriptor.version.clone(),
         }
     }
 }
 
+/// Risk scores by domain.
+#[derive(
+    PartialEq, PartialOrd, Copy, Clone, Debug, Default, Serialize, Deserialize, JsonSchema,
+)]
+pub struct RiskScores {
+    pub total: f32,
+    pub vulnerability: f32,
+    pub malicious_code: f32,
+    pub author: f32,
+    pub engineering: f32,
+    pub license: f32,
+}
+
+/// Change in score over time.
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct ScoreDynamicsPoint {
+    pub date_time: DateTime<Utc>,
+    pub score: f32,
+    pub label: String,
+}
+
+/// A single package issue.
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct Issue {
+    pub tag: Option<String>,
+    pub id: Option<String>,
+    pub title: String,
+    pub description: String,
+    #[serde(alias = "risk_level")]
+    pub severity: RiskLevel,
+    #[serde(alias = "risk_domain")]
+    pub domain: RiskDomain,
+}
+
+/// Issue description.
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct IssuesListItem {
+    pub risk_type: RiskType,
+    pub score: f32,
+    pub impact: RiskLevel,
+    pub description: String,
+    pub title: String,
+    pub tag: Option<String>,
+    pub id: Option<String>,
+    pub ignored: IgnoredReason,
+}
+
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "camelCase")]
+pub enum RiskType {
+    TotalRisk,
+    Vulnerabilities,
+    MaliciousCodeRisk,
+    AuthorsRisk,
+    EngineeringRisk,
+    LicenseRisk,
+}
+
+impl From<RiskDomain> for RiskType {
+    fn from(risk_domain: RiskDomain) -> Self {
+        match risk_domain {
+            RiskDomain::MaliciousCode => RiskType::MaliciousCodeRisk,
+            RiskDomain::Vulnerabilities => RiskType::Vulnerabilities,
+            RiskDomain::EngineeringRisk => RiskType::EngineeringRisk,
+            RiskDomain::AuthorRisk => RiskType::AuthorsRisk,
+            RiskDomain::LicenseRisk => RiskType::LicenseRisk,
+        }
+    }
+}
+
+impl fmt::Display for RiskType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let risk_domain = match self {
+            RiskType::MaliciousCodeRisk => "MAL",
+            RiskType::Vulnerabilities => "VLN",
+            RiskType::EngineeringRisk => "ENG",
+            RiskType::AuthorsRisk => "AUT",
+            RiskType::LicenseRisk => "LIC",
+            RiskType::TotalRisk => "ALL",
+        };
+        write!(f, "{}", risk_domain)
+    }
+}
+
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "camelCase")]
+pub enum IgnoredReason {
+    False,
+    FalsePositive,
+    NotRelevant,
+    Other,
+}
+
+/// Author information
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "camelCase")]
+pub struct Author {
+    pub name: String,
+    pub avatar_url: String,
+    pub email: String,
+    pub profile_url: String,
+}
+
+/// Responsiveness of developers
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct DeveloperResponsiveness {
+    pub open_issue_count: Option<usize>,
+    pub total_issue_count: Option<usize>,
+    pub open_issue_avg_duration: Option<u32>,
+    pub open_pull_request_count: Option<usize>,
+    pub total_pull_request_count: Option<usize>,
+    pub open_pull_request_avg_duration: Option<u32>,
+}
+
+/// Count of issues for each severity.
+#[derive(
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Copy,
+    Clone,
+    Debug,
+    Default,
+    Serialize,
+    Deserialize,
+    JsonSchema,
+)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
+pub struct IssueImpacts {
+    pub low: u32,
+    pub medium: u32,
+    pub high: u32,
+    pub critical: u32,
+}
+
+impl From<&[Issue]> for IssueImpacts {
+    fn from(issues: &[Issue]) -> Self {
+        let mut impacts = IssueImpacts::default();
+        for issue in issues {
+            match issue.severity.score() {
+                score if score >= 0.8 => impacts.low += 1,
+                score if (0.5..0.8).contains(&score) => impacts.medium += 1,
+                score if (0.2..0.5).contains(&score) => impacts.high += 1,
+                _ => impacts.critical += 1,
+            }
+        }
+        impacts
+    }
+}
+
+#[derive(PartialEq, PartialOrd, Clone, Debug, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
+pub struct Package {
+    pub id: String,
+    pub name: String,
+    pub version: String,
+    pub registry: String,
+    pub published_date: Option<String>,
+    pub latest_version: Option<String>,
+    pub versions: Vec<ScoredVersion>,
+    pub description: Option<String>,
+    pub license: Option<String>,
+    pub dep_specs: Vec<PackageSpecifier>,
+    pub dependencies: Option<Vec<Package>>,
+    pub download_count: u32,
+    pub risk_scores: RiskScores,
+    pub total_risk_score_dynamics: Option<Vec<ScoreDynamicsPoint>>,
+    pub issues_details: Vec<Issue>,
+    pub issues: Vec<IssuesListItem>,
+    pub authors: Vec<Author>,
+    pub developer_responsiveness: Option<DeveloperResponsiveness>,
+    pub issue_impacts: IssueImpacts,
+    pub complete: bool,
+}
+
+// v--- TODO: OLD PACKAGE RESPONSES ---v //
+
+/// The results of an individual heuristic run
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub struct HeuristicResult {
+    /// The risk domain
+    pub domain: RiskDomain,
+    /// The score
+    pub score: f64,
+    /// The risk level bucket it falls into
+    pub risk_level: RiskLevel,
+}
+
+/// A vulnerability
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub struct Vulnerability {
+    /// If this vulnerability falls into one or more known CVEs
+    pub cve: Vec<String>,
+    /// Severity of the vulnerability
+    #[serde(rename = "severity")]
+    pub base_severity: f32,
+    /// What risk level bucket it falls into
+    pub risk_level: RiskLevel,
+    /// Title of the vulnerability
+    pub title: String,
+    /// A more in depth description
+    pub description: String,
+    /// Remediation information if known
+    pub remediation: String,
+}
+
 /// Describes a package in the system
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct PackageDescriptor {
     pub name: String,
     pub version: String,
     #[serde(rename = "type")]
+    #[serde(alias = "registry")]
     pub package_type: PackageType,
 }
 
 /// Basic core package meta data
 // TODO Clearer name
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct PackageStatus {
     /// Name of the package
     pub name: String,
@@ -196,7 +412,7 @@ pub struct PackageStatus {
 
 /// Package metadata with extended info info
 // TODO Clearer name
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct PackageStatusExtended {
     #[serde(flatten)]
     pub basic_status: PackageStatus,

@@ -2,10 +2,13 @@
 
 use core::fmt;
 
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// Typed wrapper for AuthorizationCode as used in OAuth login flow with PKCE
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
+)]
 pub struct AuthorizationCode(String);
 
 impl AuthorizationCode {
@@ -27,7 +30,9 @@ impl fmt::Display for AuthorizationCode {
 }
 
 /// Typed wrapper for RefreshToken
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
+)]
 pub struct RefreshToken(String);
 
 impl RefreshToken {
@@ -49,7 +54,9 @@ impl fmt::Display for RefreshToken {
 }
 
 /// Typed wrapper for AccessToken
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
+)]
 pub struct AccessToken(String);
 
 impl AccessToken {
@@ -77,7 +84,9 @@ impl fmt::Display for AccessToken {
 }
 
 /// Typed wrapper for IdToken
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
+)]
 pub struct IdToken(String);
 
 impl IdToken {
@@ -101,7 +110,9 @@ impl fmt::Display for IdToken {
 /// Represents a response from a OAuth server containing
 /// refresh and access tokens obtained from the final stage
 /// of the OAuth login flow with PKCE
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
+)]
 pub struct TokenResponse {
     pub access_token: AccessToken,
     pub refresh_token: RefreshToken,
@@ -113,7 +124,9 @@ pub struct TokenResponse {
 /// Reprsents a refresh token response from a OAuth server after
 /// a request was made to obtain a new Access Token using the current
 /// Refresh Token
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
+)]
 pub struct AccessTokenResponse {
     pub access_token: AccessToken,
     #[serde(rename = "expires_in")]

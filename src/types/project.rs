@@ -1,13 +1,14 @@
 //! This module contains types for working with project data
-#[cfg(feature = "dev_api_issue_96")]
 use chrono::{DateTime, Utc};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::common::ProjectId;
 use super::job::*;
+use super::package::PackageType;
 
 /// Rick cut off thresholds for a project
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct ProjectThresholds {
     pub author: f32,
     pub engineering: f32,
@@ -18,23 +19,9 @@ pub struct ProjectThresholds {
 }
 
 /// Summary response for a project
-#[cfg(not(feature = "dev_api_issue_96"))]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
-pub struct ProjectSummaryResponse {
-    /// The project name
-    pub name: String,
-    /// The project id
-    pub id: String,
-    /// When the project was updated
-    pub updated_at: String,
-    /* TODO: Need to update request manager to include thresholds with this
-     *       response.
-     *pub thresholds: ProjectThresholds, */
-}
-
-/// Summary response for a project
-#[cfg(feature = "dev_api_issue_96")]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct ProjectSummaryResponse {
     /// The project name
     pub name: String,
@@ -42,14 +29,16 @@ pub struct ProjectSummaryResponse {
     pub id: ProjectId,
     /// When the project was updated
     pub updated_at: DateTime<Utc>,
+    /// When the project was created
     pub created_at: DateTime<Utc>,
-    /* TODO: Need to update request manager to include thresholds with this
-     *       response.
-     *pub thresholds: ProjectThresholds, */
+    /// The ecosystem of the project; determined by its latest job
+    pub ecosystem: Option<PackageType>,
+    /// The project's group's name, if this is a group project
+    pub group_name: Option<String>,
 }
 
 /// A more detailed project response
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct ProjectDetailsResponse {
     /// The project name
     pub name: String,
@@ -64,7 +53,9 @@ pub struct ProjectDetailsResponse {
 }
 
 /// Rquest to create a project
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct CreateProjectRequest {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -74,7 +65,9 @@ pub struct CreateProjectRequest {
 pub type UpdateProjectRequest = CreateProjectRequest;
 
 /// Response of a create project request
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
 pub struct CreateProjectResponse {
     /// The id of the newly created project
     pub id: ProjectId,

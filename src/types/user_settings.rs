@@ -2,10 +2,11 @@
 
 use std::collections::HashMap;
 
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// Threshold for a given risk
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Threshold {
     // TODO Should this be the Action enum?
     pub action: String,
@@ -15,12 +16,12 @@ pub struct Threshold {
     pub threshold: f32,
 }
 
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct UserProject {
     pub thresholds: HashMap<String, Threshold>,
 }
 
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum Setting {
     DefaultLabel(HashMap<String, String>),
@@ -29,7 +30,7 @@ pub enum Setting {
 
 /// Exposes the user settings most often used by the CLI
 // TODO Unify with API user settings type
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct UserSettings {
     pub version: u32,
     pub projects: HashMap<String, Setting>,
