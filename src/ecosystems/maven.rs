@@ -494,11 +494,18 @@ pub struct Notifier {
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+pub struct Site {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub url: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub struct DistributionManagement {
     pub repository: Option<Repository>,
     #[serde(rename = "snapshotRepository")]
     pub snapshot_repository: Option<Repository>,
-    pub site: Option<String>,
+    pub site: Option<Site>,
     #[serde(rename = "downloadUrl")]
     pub download_url: Option<String>,
     pub relocation: Option<Relocation>,
