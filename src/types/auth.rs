@@ -15,6 +15,10 @@ impl AuthorizationCode {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
     }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
 impl From<&AuthorizationCode> for String {
@@ -31,7 +35,7 @@ impl fmt::Display for AuthorizationCode {
 
 impl AsRef<str> for AuthorizationCode {
     fn as_ref(&self) -> &str {
-        &self.0
+        self.as_str()
     }
 }
 
@@ -44,6 +48,10 @@ pub struct RefreshToken(String);
 impl RefreshToken {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
     }
 }
 
@@ -61,7 +69,7 @@ impl fmt::Display for RefreshToken {
 
 impl AsRef<str> for RefreshToken {
     fn as_ref(&self) -> &str {
-        &self.0
+        self.as_str()
     }
 }
 
@@ -74,6 +82,10 @@ pub struct AccessToken(String);
 impl AccessToken {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
     }
 }
 
@@ -97,7 +109,7 @@ impl fmt::Display for AccessToken {
 
 impl AsRef<str> for AccessToken {
     fn as_ref(&self) -> &str {
-        &self.0
+        self.as_str()
     }
 }
 
@@ -110,6 +122,10 @@ pub struct IdToken(String);
 impl IdToken {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
     }
 }
 
@@ -127,7 +143,7 @@ impl fmt::Display for IdToken {
 
 impl AsRef<str> for IdToken {
     fn as_ref(&self) -> &str {
-        &self.0
+        self.as_str()
     }
 }
 
