@@ -29,6 +29,12 @@ impl fmt::Display for AuthorizationCode {
     }
 }
 
+impl AsRef<str> for AuthorizationCode {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
+
 /// Typed wrapper for RefreshToken
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
@@ -50,6 +56,12 @@ impl From<&RefreshToken> for String {
 impl fmt::Display for RefreshToken {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl AsRef<str> for RefreshToken {
+    fn as_ref(&self) -> &str {
+        &self.0
     }
 }
 
@@ -83,6 +95,12 @@ impl fmt::Display for AccessToken {
     }
 }
 
+impl AsRef<str> for AccessToken {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
+
 /// Typed wrapper for IdToken
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
@@ -104,6 +122,12 @@ impl From<&IdToken> for String {
 impl fmt::Display for IdToken {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl AsRef<str> for IdToken {
+    fn as_ref(&self) -> &str {
+        &self.0
     }
 }
 
