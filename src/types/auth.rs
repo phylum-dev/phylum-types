@@ -15,6 +15,10 @@ impl AuthorizationCode {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
     }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
 impl From<&AuthorizationCode> for String {
@@ -29,6 +33,12 @@ impl fmt::Display for AuthorizationCode {
     }
 }
 
+impl AsRef<str> for AuthorizationCode {
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
+
 /// Typed wrapper for RefreshToken
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
@@ -38,6 +48,10 @@ pub struct RefreshToken(String);
 impl RefreshToken {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
     }
 }
 
@@ -53,6 +67,12 @@ impl fmt::Display for RefreshToken {
     }
 }
 
+impl AsRef<str> for RefreshToken {
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
+
 /// Typed wrapper for AccessToken
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
@@ -62,6 +82,10 @@ pub struct AccessToken(String);
 impl AccessToken {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
     }
 }
 
@@ -83,6 +107,12 @@ impl fmt::Display for AccessToken {
     }
 }
 
+impl AsRef<str> for AccessToken {
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
+
 /// Typed wrapper for IdToken
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Serialize, Deserialize, JsonSchema,
@@ -92,6 +122,10 @@ pub struct IdToken(String);
 impl IdToken {
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_owned())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
     }
 }
 
@@ -104,6 +138,12 @@ impl From<&IdToken> for String {
 impl fmt::Display for IdToken {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl AsRef<str> for IdToken {
+    fn as_ref(&self) -> &str {
+        self.as_str()
     }
 }
 
