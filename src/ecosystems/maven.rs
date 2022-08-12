@@ -6,7 +6,7 @@ use std::ops::Deref;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Project {
     #[serde(rename = "modelVersion")]
     pub model_version: Option<String>,
@@ -51,7 +51,7 @@ pub struct Project {
     pub profiles: Option<Profiles>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Licenses {
     #[serde(rename = "license", default)]
     pub licenses: Vec<License>,
@@ -65,7 +65,7 @@ impl Deref for Licenses {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct License {
     pub name: Option<String>,
     pub url: Option<String>,
@@ -73,13 +73,13 @@ pub struct License {
     pub comments: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Organization {
     pub name: Option<String>,
     pub url: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Developers {
     #[serde(rename = "developer", default)]
     pub developers: Vec<Person>,
@@ -93,7 +93,7 @@ impl Deref for Developers {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Contributors {
     #[serde(rename = "contributor", default)]
     pub contributors: Vec<Person>,
@@ -107,13 +107,13 @@ impl Deref for Contributors {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct MailingLists {
     #[serde(rename = "mailingList", default)]
     pub mailing_list: Vec<MailingList>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct MailingList {
     pub name: Option<String>,
     pub subscribe: Option<String>,
@@ -124,18 +124,18 @@ pub struct MailingList {
     pub other_archives: Option<OtherArchives>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct OtherArchives {
     #[serde(rename = "otherArchive", default)]
     pub other_archive: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Prerequisites {
     pub maven: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Person {
     pub id: Option<String>,
     pub name: Option<String>,
@@ -150,13 +150,13 @@ pub struct Person {
     pub properties: HashMap<String, String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Roles {
     #[serde(rename = "role", default)]
     pub roles: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Parent {
     #[serde(rename = "groupId")]
     pub group_id: Option<String>,
@@ -167,7 +167,7 @@ pub struct Parent {
     pub relative_path: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Dependencies {
     #[serde(rename = "dependency", default)]
     pub dependencies: Vec<Dependency>,
@@ -181,7 +181,7 @@ impl Deref for Dependencies {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Dependency {
     #[serde(rename = "groupId")]
     pub group_id: Option<String>,
@@ -198,13 +198,13 @@ pub struct Dependency {
     pub optional: Option<bool>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Exclusions {
     #[serde(rename = "exclusion", default)]
     pub exclusions: Vec<Exclusion>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Exclusion {
     #[serde(rename = "groupId")]
     pub group_id: Option<String>,
@@ -212,13 +212,13 @@ pub struct Exclusion {
     pub artifact_id: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Modules {
     #[serde(rename = "module", default)]
     pub modules: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Build {
     #[serde(rename = "sourceDirectory")]
     pub source_directory: Option<String>,
@@ -245,25 +245,25 @@ pub struct Build {
     pub plugins: Option<Plugins>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Filters {
     #[serde(rename = "filter", default)]
     pub filters: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Resources {
     #[serde(rename = "resource", default)]
     pub resources: Vec<Resource>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct TestResources {
     #[serde(rename = "testResource", default)]
     pub test_resources: Vec<Resource>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Resource {
     #[serde(rename = "targetPath")]
     pub target_path: Option<String>,
@@ -273,19 +273,19 @@ pub struct Resource {
     pub excludes: Option<Excludes>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Includes {
     #[serde(rename = "include", default)]
     pub includes: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Excludes {
     #[serde(rename = "exclude", default)]
     pub excludes: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Plugins {
     #[serde(rename = "plugin", default)]
     pub plugins: Vec<Plugin>,
@@ -299,12 +299,12 @@ impl Deref for Plugins {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PluginManagement {
     pub plugins: Plugins,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Plugin {
     #[serde(rename = "groupId", default = "default_plugin_group_id")]
     pub group_id: Option<String>,
@@ -323,13 +323,13 @@ fn default_plugin_group_id() -> Option<String> {
     Some(String::from("org.apache.maven.plugins"))
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Executions {
     #[serde(rename = "execution", default)]
     pub executions: Vec<Execution>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Execution {
     pub id: Option<String>,
     pub phase: Option<String>,
@@ -338,24 +338,24 @@ pub struct Execution {
     pub configuration: Option<Configuration>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Configuration {
     // empty because this is different for every plugin and execution :(
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Reports {
     #[serde(rename = "report", default)]
     pub reports: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Goals {
     #[serde(rename = "goal", default)]
     pub goals: Vec<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Extensions {
     #[serde(rename = "extension", default)]
     pub extensions: Vec<Extension>,
@@ -369,7 +369,7 @@ impl Deref for Extensions {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Extension {
     #[serde(rename = "artifactId")]
     pub artifact_id: Option<String>,
@@ -378,7 +378,7 @@ pub struct Extension {
     pub version: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Profiles {
     #[serde(rename = "profile", default)]
     pub profiles: Vec<Profile>,
@@ -392,7 +392,7 @@ impl Deref for Profiles {
     }
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Profile {
     pub id: Option<String>,
     pub activation: Option<Activation>,
@@ -410,30 +410,30 @@ pub struct Profile {
     pub reporting: Option<Reporting>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Activation {
     #[serde(rename = "activeByDefault")]
     pub active_by_default: Option<bool>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct DependencyManagement {
     pub dependencies: Dependencies,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Repositories {
     #[serde(rename = "repository", default)]
     pub repositories: Vec<Repository>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PluginRepositories {
     #[serde(rename = "pluginRepository", default)]
     pub repositories: Vec<Repository>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Repository {
     #[serde(rename = "uniqueVersion")]
     pub unique_version: Option<bool>,
@@ -445,7 +445,7 @@ pub struct Repository {
     pub layout: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct RepositoryPolicy {
     pub enabled: Option<String>,
     #[serde(rename = "updatePolicy")]
@@ -454,7 +454,7 @@ pub struct RepositoryPolicy {
     pub checksum_policy: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Scm {
     pub connection: Option<String>,
     #[serde(rename = "developerConnection")]
@@ -463,13 +463,13 @@ pub struct Scm {
     pub url: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct IssueManagement {
     pub system: Option<String>,
     pub url: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CiManagement {
     pub system: Option<String>,
     pub url: Option<String>,
@@ -477,7 +477,7 @@ pub struct CiManagement {
     pub notifiers: Vec<Notifier>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Notifier {
     #[serde(rename = "type")]
     pub ntype: Option<String>,
@@ -493,14 +493,14 @@ pub struct Notifier {
     pub configuration: HashMap<String, String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Site {
     pub id: Option<String>,
     pub name: Option<String>,
     pub url: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct DistributionManagement {
     pub repository: Option<Repository>,
     #[serde(rename = "snapshotRepository")]
@@ -512,7 +512,7 @@ pub struct DistributionManagement {
     pub status: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Relocation {
     #[serde(rename = "groupId")]
     pub group_id: Option<String>,
@@ -522,7 +522,7 @@ pub struct Relocation {
     pub message: Option<String>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Reporting {
     #[serde(rename = "excludeDefaults")]
     pub exclude_defaults: Option<String>,
