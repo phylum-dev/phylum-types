@@ -16,6 +16,16 @@ pub struct Threshold {
     pub threshold: f32,
 }
 
+impl Default for Threshold {
+    fn default() -> Self {
+        Self {
+            action: String::from("none"),
+            active: true,
+            threshold: 0.6,
+        }
+    }
+}
+
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct UserProject {
     pub thresholds: HashMap<String, Threshold>,

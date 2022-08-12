@@ -7,5 +7,6 @@ pub mod common;
 pub mod group;
 pub mod job;
 pub mod package;
+pub mod preferences;
 pub mod project;
 pub mod user_settings;
