@@ -186,20 +186,7 @@ pub struct Issue {
     pub severity: RiskLevel,
     #[serde(alias = "risk_domain")]
     pub domain: RiskDomain,
-}
-
-/// Issue description.
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct IssuesListItem {
-    pub risk_type: RiskType,
-    pub score: f32,
-    pub impact: RiskLevel,
-    pub description: String,
-    pub title: String,
-    pub tag: Option<String>,
-    pub id: Option<String>,
-    pub ignored: IgnoredReason,
+    pub ignored: Option<IgnoredReason>,
 }
 
 #[derive(
@@ -335,7 +322,7 @@ pub struct Package {
     pub risk_scores: RiskScores,
     pub total_risk_score_dynamics: Option<Vec<ScoreDynamicsPoint>>,
     pub issues_details: Vec<Issue>,
-    pub issues: Vec<IssuesListItem>,
+    pub issues: Vec<Issue>,
     pub authors: Vec<Author>,
     pub developer_responsiveness: Option<DeveloperResponsiveness>,
     pub issue_impacts: IssueImpacts,
@@ -412,7 +399,7 @@ pub struct PackageStatus {
 
 /// Package metadata with extended info info
 // TODO Clearer name
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct PackageStatusExtended {
     #[serde(flatten)]
     pub basic_status: PackageStatus,
