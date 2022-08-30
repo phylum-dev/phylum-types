@@ -1,8 +1,8 @@
 //! Module containing data types reprsenting on-the-wire data for packages
 
-use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
+use std::{collections::HashMap, convert::TryFrom};
 
 use chrono::{DateTime, Utc};
 use schemars::JsonSchema;
@@ -148,6 +148,25 @@ impl From<&PackageDescriptor> for PackageSpecifier {
             name: descriptor.name.clone(),
             version: descriptor.version.clone(),
         }
+    }
+}
+
+impl TryFrom<PackageSpecifier> for PackageDescriptor {
+    type Error = String;
+
+    fn try_from(value: PackageSpecifier) -> Result<Self, Self::Error> {
+        let PackageSpecifier {
+            registry,
+            name,
+            version,
+        } = value;
+        let package_type = PackageType::from_str(&registry)
+            .map_err(|()| format!("Failed to convert registry {} to package type", registry))?;
+        Ok(PackageDescriptor {
+            name,
+            version,
+            package_type,
+        })
     }
 }
 
