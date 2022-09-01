@@ -368,7 +368,7 @@ pub struct Package {
     pub is_abandonware: Option<bool>,
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Debug, Default, Serialize, Deserialize, JsonSchema)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Default, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(default)]
 pub struct PackageReleaseData {
     pub first_release_date: String,
