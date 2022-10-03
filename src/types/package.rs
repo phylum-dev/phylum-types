@@ -88,6 +88,7 @@ pub enum PackageType {
     Maven,
     RubyGems,
     Nuget,
+    Cargo,
 }
 
 impl PackageType {
@@ -98,6 +99,7 @@ impl PackageType {
             PackageType::PyPi => "Python",
             PackageType::Maven => "Java",
             PackageType::Nuget => ".NET",
+            PackageType::Cargo => "Rust",
         }
     }
 }
@@ -112,6 +114,7 @@ impl FromStr for PackageType {
             "maven" => Ok(Self::Maven),
             "ruby" | "rubygems" => Ok(Self::RubyGems),
             "nuget" => Ok(Self::Nuget),
+            "rust" => Ok(Self::Cargo),
             _ => Err(()),
         }
     }
