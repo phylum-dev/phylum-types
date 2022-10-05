@@ -89,6 +89,7 @@ pub enum PackageType {
     Maven,
     RubyGems,
     Nuget,
+    Golang,
 }
 
 impl PackageType {
@@ -99,6 +100,7 @@ impl PackageType {
             PackageType::PyPi => "Python",
             PackageType::Maven => "Java",
             PackageType::Nuget => ".NET",
+            PackageType::Golang => "Golang",
         }
     }
 }
@@ -113,6 +115,7 @@ impl FromStr for PackageType {
             "maven" => Ok(Self::Maven),
             "ruby" | "rubygems" => Ok(Self::RubyGems),
             "nuget" => Ok(Self::Nuget),
+            "golang" => Ok(Self::Golang),
             _ => Err(()),
         }
     }
