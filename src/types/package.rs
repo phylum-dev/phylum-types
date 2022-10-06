@@ -1,8 +1,9 @@
 //! Module containing data types reprsenting on-the-wire data for packages
 
+use std::collections::HashMap;
+use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
-use std::{collections::HashMap, convert::TryFrom};
 
 use chrono::{DateTime, Utc};
 use schemars::JsonSchema;
@@ -89,6 +90,7 @@ pub enum PackageType {
     RubyGems,
     Nuget,
     Cargo,
+    Golang,
 }
 
 impl PackageType {
@@ -100,6 +102,7 @@ impl PackageType {
             PackageType::Maven => "Java",
             PackageType::Nuget => ".NET",
             PackageType::Cargo => "Rust",
+            PackageType::Golang => "Golang",
         }
     }
 }
@@ -115,6 +118,7 @@ impl FromStr for PackageType {
             "ruby" | "rubygems" => Ok(Self::RubyGems),
             "nuget" => Ok(Self::Nuget),
             "rust" => Ok(Self::Cargo),
+            "golang" => Ok(Self::Golang),
             _ => Err(()),
         }
     }
