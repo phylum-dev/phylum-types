@@ -366,6 +366,19 @@ pub struct Package {
     pub developer_responsiveness: Option<DeveloperResponsiveness>,
     pub issue_impacts: IssueImpacts,
     pub complete: bool,
+    pub release_data: Option<PackageReleaseData>,
+    pub repo_url: Option<String>,
+    #[serde(rename = "maintainers_recently_changed")]
+    pub maintainers_recently_changed: Option<bool>,
+    #[serde(rename = "is_abandonware")]
+    pub is_abandonware: Option<bool>,
+}
+
+#[derive(PartialEq, PartialOrd, Clone, Debug, Default, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(default)]
+pub struct PackageReleaseData {
+    pub first_release_date: String,
+    pub last_release_date: String,
 }
 
 // v--- TODO: OLD PACKAGE RESPONSES ---v //
