@@ -1,11 +1,61 @@
 //! This module contains types involved with handling phylum processing jobs.
 
+use chrono::{DateTime, Utc};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::common::*;
 use super::project::*;
-use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExtended, PackageType};
+use crate::types::package::{PackageDescriptor, PackageStatusExtended, PackageType};
+
+/// Data shared between the full [`JobResponse`] type and the abbreviated [`JobDescriptor`] type.
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct JobEssentials {
+    pub id: JobId,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub label: Option<String>,
+    pub ecosystem: PackageType,
+    pub project: JobProject,
+    pub score: JobScore,
+    pub num_incomplete: u32,
+}
+
+/// Response type for the API /jobs/<job id> endpoint.
+#[derive(Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct JobResponse {
+    #[serde(flatten)]
+    pub essentials: JobEssentials,
+    pub status: Status,
+    pub package_statuses: Vec<PackageStatusExtended>,
+    pub action: Action,
+    pub thresholds: ProjectThresholds,
+}
+
+/// Metadata about a job.
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub struct JobDescriptor {
+    #[serde(flatten)]
+    pub essentials: JobEssentials,
+    pub package_descriptors: Vec<PackageDescriptor>,
+}
+
+#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct JobProject {
+    pub id: ProjectId,
+    pub name: String,
+}
+
+#[derive(Debug, PartialEq, PartialOrd, Clone, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct JobScore {
+    pub value: f64,
+    pub pass: bool,
+    pub message: String,
+}
 
 /// When a job is completed, and some requirement is not met ( such as quality
 /// level ), what action should be taken?
@@ -19,23 +69,6 @@ pub enum Action {
     None,
     Warn,
     Break,
-}
-
-/// Metadata about a job
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
-pub struct JobDescriptor {
-    pub job_id: JobId,
-    pub project: String,
-    pub label: String,
-    pub num_dependencies: u32,
-    pub score: f64,
-    pub packages: Vec<PackageDescriptor>,
-    pub pass: bool,
-    pub msg: String,
-    pub date: String,
-    pub ecosystem: String,
-    #[serde(default)]
-    pub num_incomplete: u32,
 }
 
 /// Submit Package for analysis
@@ -71,20 +104,23 @@ pub struct SubmitPackageResponse {
 /// Represents a response that summarizes the output of all current jobs
 #[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct AllJobsStatusResponse {
-    /// A description of the latest jobs
+    /// A description of the latest jobs.
     pub jobs: Vec<JobDescriptor>,
-    /// Total jobs run
+    /// Total jobs run.
     pub total_jobs: u32,
-    pub count: u32,
 }
 
-#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum JobStatusResponseVariant {
-    // Serde returns the one that deserializes successfully first, so most complicated goes first
-    Extended(JobStatusResponse<PackageStatusExtended>),
-    Basic(JobStatusResponse<PackageStatus>),
+/// Response from canceling a job
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct CancelJobResponse {
+    pub msg: String,
 }
+
+// --------------------------------------------------------------
+// V                                                            V
+// V -------- EVERYTHING BELOW THIS LINE IS DEPRECATED -------- V
 
 /// Data returned when querying the job status endpoint
 #[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -125,12 +161,4 @@ pub struct JobStatusResponse<T> {
     pub thresholds: ProjectThresholds,
     /// The packages that are a part of this job
     pub packages: Vec<T>,
-}
-
-/// Response from canceling a job
-#[derive(
-    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
-)]
-pub struct CancelJobResponse {
-    pub msg: String,
 }
