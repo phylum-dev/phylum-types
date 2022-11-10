@@ -117,7 +117,7 @@ impl FromStr for PackageType {
             "maven" => Ok(Self::Maven),
             "ruby" | "rubygems" => Ok(Self::RubyGems),
             "nuget" => Ok(Self::Nuget),
-            "rust" => Ok(Self::Cargo),
+            "cargo" => Ok(Self::Cargo),
             "golang" => Ok(Self::Golang),
             _ => Err(()),
         }
