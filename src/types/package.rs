@@ -342,6 +342,14 @@ impl From<&[Issue]> for IssueImpacts {
     }
 }
 
+#[derive(Deserialize, Serialize, PartialEq, Debug)]
+#[serde(tag = "status", content = "data")]
+pub enum PackageSubmitResponse {
+    AlreadyProcessed(Package),
+    AlreadySubmitted,
+    New,
+}
+
 #[derive(PartialEq, PartialOrd, Clone, Debug, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
