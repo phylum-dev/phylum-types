@@ -97,12 +97,10 @@ pub struct JobStatusResponse<T> {
     /// The id of the job processing the top level package
     pub job_id: JobId,
     /// The language ecosystem
-    /// TODO: How is this different than package type ( npm, etc ) or language?
     // don't deprecate until `ecosystems` is live.
     //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
     pub ecosystem: String,
     /// The language ecosystem
-    /// TODO: How is this different than package type ( npm, etc ) or language?
     pub ecosystems: Vec<String>,
     /// The id of the user submitting the job
     pub user_id: UserId,
