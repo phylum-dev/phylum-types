@@ -36,6 +36,7 @@ pub struct JobDescriptor {
     // don't deprecate until `ecosystems` is live.
     //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
     pub ecosystem: String,
+    #[serde(default)]
     pub ecosystems: Vec<String>,
     #[serde(default)]
     pub num_incomplete: u32,
@@ -101,6 +102,7 @@ pub struct JobStatusResponse<T> {
     //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
     pub ecosystem: String,
     /// The language ecosystem
+    #[serde(default)]
     pub ecosystems: Vec<String>,
     /// The id of the user submitting the job
     pub user_id: UserId,

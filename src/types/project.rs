@@ -36,6 +36,7 @@ pub struct ProjectSummaryResponse {
     //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
     pub ecosystem: Option<PackageType>,
     /// The ecosystems of the project; determined by its latest job
+    #[serde(default)]
     pub ecosystems: Vec<PackageType>,
     /// The project's group's name, if this is a group project
     pub group_name: Option<String>,
@@ -53,6 +54,7 @@ pub struct ProjectDetailsResponse {
     //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
     pub ecosystem: String,
     /// The project ecosystems / package types
+    #[serde(default)]
     pub ecosystems: Vec<String>,
     /// The configured risk cutoff thresholds for the project
     pub thresholds: ProjectThresholds,
