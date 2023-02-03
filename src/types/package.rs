@@ -73,7 +73,7 @@ impl RiskLevel {
 
 impl fmt::Display for RiskLevel {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let risk_level = format!("{:?}", self);
+        let risk_level = format!("{self:?}");
         write!(f, "{}", risk_level.to_lowercase())
     }
 }
@@ -126,7 +126,7 @@ impl FromStr for PackageType {
 
 impl fmt::Display for PackageType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let package_type = format!("{:?}", self);
+        let package_type = format!("{self:?}");
         write!(f, "{}", package_type.to_lowercase())
     }
 }
@@ -168,7 +168,7 @@ impl TryFrom<PackageSpecifier> for PackageDescriptor {
             version,
         } = value;
         let package_type = PackageType::from_str(&registry)
-            .map_err(|()| format!("Failed to convert registry {} to package type", registry))?;
+            .map_err(|()| format!("Failed to convert registry {registry} to package type"))?;
         Ok(PackageDescriptor {
             name,
             version,
@@ -263,7 +263,7 @@ impl fmt::Display for RiskType {
             RiskType::LicenseRisk => "LIC",
             RiskType::TotalRisk => "ALL",
         };
-        write!(f, "{}", risk_domain)
+        write!(f, "{risk_domain}")
     }
 }
 
