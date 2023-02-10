@@ -25,7 +25,8 @@ pub enum RiskDomain {
     EngineeringRisk = 1,
     /// Malicious code such as malware or crypto miners
     #[serde(rename = "malicious_code")]
-    MaliciousCode = 2,
+    #[serde(alias = "malicious")]
+    Malicious = 2,
     /// A code vulnerability such as use-after-free or other code smell
     #[serde(rename = "vulnerability")]
     Vulnerabilities = 3,
@@ -184,7 +185,9 @@ impl TryFrom<PackageSpecifier> for PackageDescriptor {
 pub struct RiskScores {
     pub total: f32,
     pub vulnerability: f32,
-    pub malicious_code: f32,
+    #[serde(rename = "malicious_code")]
+    #[serde(alias = "malicious")]
+    pub malicious: f32,
     pub author: f32,
     pub engineering: f32,
     pub license: f32,
@@ -235,7 +238,9 @@ pub struct IssuesListItem {
 pub enum RiskType {
     TotalRisk,
     Vulnerabilities,
-    MaliciousCodeRisk,
+    #[serde(alias = "maliciousRisk")]
+    #[serde(rename = "maliciousCodeRisk")]
+    MaliciousRisk,
     AuthorsRisk,
     EngineeringRisk,
     LicenseRisk,
@@ -244,7 +249,7 @@ pub enum RiskType {
 impl From<RiskDomain> for RiskType {
     fn from(risk_domain: RiskDomain) -> Self {
         match risk_domain {
-            RiskDomain::MaliciousCode => RiskType::MaliciousCodeRisk,
+            RiskDomain::Malicious => RiskType::MaliciousRisk,
             RiskDomain::Vulnerabilities => RiskType::Vulnerabilities,
             RiskDomain::EngineeringRisk => RiskType::EngineeringRisk,
             RiskDomain::AuthorRisk => RiskType::AuthorsRisk,
@@ -256,7 +261,7 @@ impl From<RiskDomain> for RiskType {
 impl fmt::Display for RiskType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let risk_domain = match self {
-            RiskType::MaliciousCodeRisk => "MAL",
+            RiskType::MaliciousRisk => "MAL",
             RiskType::Vulnerabilities => "VLN",
             RiskType::EngineeringRisk => "ENG",
             RiskType::AuthorsRisk => "AUT",
