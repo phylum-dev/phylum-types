@@ -28,13 +28,14 @@ pub struct ProjectPreferences {
 
 /// Capture the project threshold settings.
 #[derive(Serialize, Deserialize, Clone, Debug, Default, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct RiskThresholds {
     pub total: Threshold,
     pub author: Threshold,
     pub engineering: Threshold,
     pub license: Threshold,
-    pub malicious_code: Threshold,
+    #[serde(alias = "malicious")]
+    #[serde(rename = "maliciousCode")]
+    pub malicious: Threshold,
     pub vulnerability: Threshold,
 }
 
