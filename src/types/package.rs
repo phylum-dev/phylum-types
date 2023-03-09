@@ -117,7 +117,7 @@ impl FromStr for PackageType {
             "python" | "pypi" => Ok(Self::PyPi),
             "maven" => Ok(Self::Maven),
             "ruby" | "rubygems" | "gem" => Ok(Self::RubyGems),
-            "nuget" => Ok(Self::Nuget),
+            "nuget" | "dotnet" => Ok(Self::Nuget),
             "cargo" => Ok(Self::Cargo),
             "golang" => Ok(Self::Golang),
             _ => Err(()),
