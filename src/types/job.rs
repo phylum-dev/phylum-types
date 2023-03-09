@@ -54,6 +54,8 @@ pub struct SubmitPackageRequest {
     pub package_type: PackageType,
     /// The subpackage dependencies of this package
     pub packages: Vec<PackageDescriptor>,
+    /// Was this submitted by a user interactively and not a CI?
+    pub is_user: bool,
     /// The id of the project this top level package should be associated with
     pub project: ProjectId,
     /// A label for this package. Often it's the branch.
