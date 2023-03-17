@@ -50,7 +50,7 @@ pub struct ProjectDetailsResponse {
     pub id: String,
     /// The project ecosystem / package type
     #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
-    pub ecosystem: String,
+    pub ecosystem: Option<String>,
     /// The project ecosystems / package types
     #[serde(default)]
     pub ecosystems: Vec<String>,
