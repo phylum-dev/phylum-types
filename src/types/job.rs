@@ -33,9 +33,8 @@ pub struct JobDescriptor {
     pub pass: bool,
     pub msg: String,
     pub date: String,
-    // don't deprecate until `ecosystems` is live.
-    //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
-    pub ecosystem: String,
+    #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
+    pub ecosystem: Option<String>,
     #[serde(default)]
     pub ecosystems: Vec<String>,
     #[serde(default)]
@@ -48,10 +47,9 @@ pub struct JobDescriptor {
 )]
 pub struct SubmitPackageRequest {
     /// The 'type' of package, NPM, RubyGem, etc
-    // don't deprecate until `ecosystems` is live.
-    //#[deprecated = "No longer used."]
+    #[deprecated = "No longer used."]
     #[serde(rename = "type")]
-    pub package_type: PackageType,
+    pub package_type: Option<PackageType>,
     /// The subpackage dependencies of this package
     pub packages: Vec<PackageDescriptor>,
     /// Was this submitted by a user interactively and not a CI?
@@ -98,9 +96,8 @@ pub struct JobStatusResponse<T> {
     /// The id of the job processing the top level package
     pub job_id: JobId,
     /// The language ecosystem
-    // don't deprecate until `ecosystems` is live.
-    //#[deprecated = "Use `ecosystems` to support multiple ecosystems."]
-    pub ecosystem: String,
+    #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
+    pub ecosystem: Option<String>,
     /// The language ecosystem
     #[serde(default)]
     pub ecosystems: Vec<String>,
