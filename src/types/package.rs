@@ -273,10 +273,22 @@ impl fmt::Display for RiskType {
 }
 
 #[derive(
-    PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema,
+    Clone,
+    Copy,
+    Debug,
+    Default,
+    Deserialize,
+    Eq,
+    Hash,
+    JsonSchema,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Serialize,
 )]
 #[serde(rename_all = "camelCase")]
 pub enum IgnoredReason {
+    #[default]
     False,
     FalsePositive,
     NotRelevant,
@@ -480,5 +492,16 @@ pub struct PackageStatusExtended {
     pub dependencies: HashMap<String, String>,
     /// Any issues found that may need action, but aren't in and of themselves
     /// vulnerabilities
-    pub issues: Vec<Issue>,
+    pub issues: Vec<IssueStatus>,
+}
+
+/// A dependency issue with its job status.
+#[derive(PartialEq, Clone, Debug, Deserialize, Eq, JsonSchema, Serialize)]
+pub struct IssueStatus {
+    /// The issue.
+    #[serde(flatten)]
+    pub issue: Issue,
+    /// The reason why the issue is ignored (if applicable).
+    #[serde(default)]
+    pub ignored: IgnoredReason,
 }
