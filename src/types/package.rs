@@ -371,6 +371,8 @@ pub enum PackageSubmitResponse {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct Package {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub purl: Option<String>,
     pub id: String,
     pub name: String,
     pub version: String,
@@ -452,6 +454,9 @@ pub struct PackageDescriptor {
 // TODO Clearer name
 #[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct PackageStatus {
+    /// A PURL referencing this package.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub purl: Option<String>,
     /// Name of the package
     pub name: String,
     /// Package version

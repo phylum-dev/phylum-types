@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use super::common::*;
 use super::project::*;
-use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExtended, PackageType};
+use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExtended};
 
 /// When a job is completed, and some requirement is not met ( such as quality
 /// level ), what action should be taken?
@@ -29,7 +29,7 @@ pub struct JobDescriptor {
     pub label: String,
     pub num_dependencies: u32,
     pub score: f64,
-    pub packages: Vec<PackageDescriptor>,
+    pub packages: PackageDescriptorsOrPurls,
     pub pass: bool,
     pub msg: String,
     pub date: String,
@@ -39,6 +39,22 @@ pub struct JobDescriptor {
     pub ecosystems: Vec<String>,
     #[serde(default)]
     pub num_incomplete: u32,
+}
+
+/// Either a list of package descriptors or a list of PURLs.
+#[derive(
+    Clone, Debug, Deserialize, Eq, Hash, JsonSchema, Ord, PartialEq, PartialOrd, Serialize,
+)]
+#[serde(untagged)]
+pub enum PackageDescriptorsOrPurls {
+    PackageDescriptors(Vec<PackageDescriptor>),
+    Purls(Vec<String>),
+}
+
+impl Default for PackageDescriptorsOrPurls {
+    fn default() -> Self {
+        PackageDescriptorsOrPurls::PackageDescriptors(vec![])
+    }
 }
 
 /// Submit Package for analysis
@@ -51,7 +67,7 @@ pub struct SubmitPackageRequest {
     #[serde(rename = "type")]
     pub package_type: Option<PackageType>,
     /// The subpackage dependencies of this package
-    pub packages: Vec<PackageDescriptor>,
+    pub packages: PackageDescriptorsOrPurls,
     /// Was this submitted by a user interactively and not a CI?
     pub is_user: bool,
     /// The id of the project this top level package should be associated with
@@ -140,4 +156,92 @@ pub struct JobStatusResponse<T> {
 )]
 pub struct CancelJobResponse {
     pub msg: String,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    mod package_descriptors_or_purls {
+        use super::*;
+
+        mod package_descriptors {
+            use crate::types::package::PackageType;
+
+            use super::*;
+
+            const SERIALIZED: &str = r#"[{"name":"a","version":"1.0","type":"npm"},{"name":"b","version":"2.0","type":"pypi"}]"#;
+            fn deserialized() -> PackageDescriptorsOrPurls {
+                PackageDescriptorsOrPurls::PackageDescriptors(vec![
+                    PackageDescriptor {
+                        name: "a".to_owned(),
+                        version: "1.0".to_owned(),
+                        package_type: PackageType::Npm,
+                    },
+                    PackageDescriptor {
+                        name: "b".to_owned(),
+                        version: "2.0".to_owned(),
+                        package_type: PackageType::PyPi,
+                    },
+                ])
+            }
+
+            #[test]
+            fn deserializes_correctly() {
+                let result: PackageDescriptorsOrPurls = serde_json::from_str(SERIALIZED).unwrap();
+                assert_eq!(deserialized(), result);
+            }
+
+            #[test]
+            fn serializes_correctly() {
+                let result = serde_json::to_string(&deserialized()).unwrap();
+                assert_eq!(SERIALIZED, &result);
+            }
+        }
+
+        mod purls {
+            use super::*;
+
+            const SERIALIZED: &str = r#"["pkg:npm/a@1.0","pkg:pypi/b@2.0"]"#;
+            fn deserialized() -> PackageDescriptorsOrPurls {
+                PackageDescriptorsOrPurls::Purls(vec![
+                    "pkg:npm/a@1.0".to_owned(),
+                    "pkg:pypi/b@2.0".to_owned(),
+                ])
+            }
+
+            #[test]
+            fn deserializes_correctly() {
+                let result: PackageDescriptorsOrPurls = serde_json::from_str(SERIALIZED).unwrap();
+                assert_eq!(deserialized(), result);
+            }
+
+            #[test]
+            fn serializes_correctly() {
+                let result = serde_json::to_string(&deserialized()).unwrap();
+                assert_eq!(SERIALIZED, &result);
+            }
+        }
+
+        mod empty {
+            use super::*;
+
+            const SERIALIZED: &str = "[]";
+            fn deserialized() -> PackageDescriptorsOrPurls {
+                PackageDescriptorsOrPurls::PackageDescriptors(vec![])
+            }
+
+            #[test]
+            fn deserializes_correctly() {
+                let result: PackageDescriptorsOrPurls = serde_json::from_str(SERIALIZED).unwrap();
+                assert_eq!(deserialized(), result);
+            }
+
+            #[test]
+            fn serializes_correctly() {
+                let result = serde_json::to_string(&deserialized()).unwrap();
+                assert_eq!(SERIALIZED, &result);
+            }
+        }
+    }
 }
