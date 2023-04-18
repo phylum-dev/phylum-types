@@ -33,8 +33,6 @@ pub struct JobDescriptor {
     pub pass: bool,
     pub msg: String,
     pub date: String,
-    #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
-    pub ecosystem: Option<String>,
     #[serde(default)]
     pub ecosystems: Vec<String>,
     #[serde(default)]
@@ -46,10 +44,6 @@ pub struct JobDescriptor {
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
 pub struct SubmitPackageRequest {
-    /// The 'type' of package, NPM, RubyGem, etc
-    #[deprecated = "No longer used."]
-    #[serde(rename = "type")]
-    pub package_type: Option<PackageType>,
     /// The subpackage dependencies of this package
     pub packages: Vec<PackageDescriptor>,
     /// Was this submitted by a user interactively and not a CI?
@@ -95,9 +89,6 @@ pub enum JobStatusResponseVariant {
 pub struct JobStatusResponse<T> {
     /// The id of the job processing the top level package
     pub job_id: JobId,
-    /// The language ecosystem
-    #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
-    pub ecosystem: Option<String>,
     /// The language ecosystem
     #[serde(default)]
     pub ecosystems: Vec<String>,
