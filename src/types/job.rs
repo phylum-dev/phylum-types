@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use super::common::*;
 use super::project::*;
-use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExtended};
+use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExtended, PackageType};
 
 /// When a job is completed, and some requirement is not met ( such as quality
 /// level ), what action should be taken?
