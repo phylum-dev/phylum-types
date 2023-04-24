@@ -31,6 +31,9 @@ pub struct ProjectSummaryResponse {
     pub updated_at: DateTime<Utc>,
     /// When the project was created
     pub created_at: DateTime<Utc>,
+    /// The ecosystem of the project; determined by its latest job
+    #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
+    pub ecosystem: Option<PackageType>,
     /// The ecosystems of the project; determined by its latest job
     #[serde(default)]
     pub ecosystems: Vec<PackageType>,
@@ -45,6 +48,9 @@ pub struct ProjectDetailsResponse {
     pub name: String,
     /// The project id
     pub id: String,
+    /// The project ecosystem / package type
+    #[deprecated = "Use `ecosystems` to support multiple ecosystems."]
+    pub ecosystem: Option<String>,
     /// The project ecosystems / package types
     #[serde(default)]
     pub ecosystems: Vec<String>,
