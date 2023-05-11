@@ -115,7 +115,7 @@ impl FromStr for PackageType {
         match input.to_lowercase().as_str() {
             "npm" => Ok(Self::Npm),
             "python" | "pypi" => Ok(Self::PyPi),
-            "maven" => Ok(Self::Maven),
+            "maven" | "maven-central" => Ok(Self::Maven),
             "ruby" | "rubygems" | "gem" => Ok(Self::RubyGems),
             "nuget" | "dotnet" => Ok(Self::Nuget),
             "cargo" => Ok(Self::Cargo),
