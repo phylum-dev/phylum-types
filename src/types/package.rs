@@ -1,11 +1,12 @@
 //! Module containing data types reprsenting on-the-wire data for packages
 
-use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
+use std::{collections::HashMap, path::PathBuf};
 
 use chrono::{DateTime, Utc};
+use purl::Purl;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -121,6 +122,20 @@ impl FromStr for PackageType {
             "cargo" => Ok(Self::Cargo),
             "golang" => Ok(Self::Golang),
             _ => Err(()),
+        }
+    }
+}
+
+impl From<PackageType> for purl::PackageType {
+    fn from(value: PackageType) -> Self {
+        match value {
+            PackageType::Npm => purl::PackageType::Npm,
+            PackageType::PyPi => purl::PackageType::PyPI,
+            PackageType::Maven => purl::PackageType::Maven,
+            PackageType::RubyGems => purl::PackageType::Gem,
+            PackageType::Nuget => purl::PackageType::NuGet,
+            PackageType::Cargo => purl::PackageType::Cargo,
+            PackageType::Golang => purl::PackageType::Golang,
         }
     }
 }
@@ -448,6 +463,67 @@ pub struct PackageDescriptor {
     #[serde(rename = "type")]
     #[serde(alias = "registry")]
     pub package_type: PackageType,
+}
+
+/// Describes a package descriptor in the system with lockfile path
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct LockFilePackageDescriptor {
+    pub package_descriptor: PackageDescriptor,
+    pub lockfile_path: Option<String>,
+}
+
+impl From<&PackageDescriptor> for LockFilePackageDescriptor {
+    fn from(value: &PackageDescriptor) -> Self {
+        LockFilePackageDescriptor {
+            package_descriptor: value.clone(),
+            lockfile_path: None,
+        }
+    }
+}
+
+/// Describes a package specifier in the system with lockfile path
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct LockFilePackageSpecifier {
+    pub package_specifier: PackageSpecifier,
+    pub lockfile_path: Option<String>,
+}
+
+impl From<&PackageSpecifier> for LockFilePackageSpecifier {
+    fn from(value: &PackageSpecifier) -> Self {
+        LockFilePackageSpecifier {
+            package_specifier: value.clone(),
+            lockfile_path: None,
+        }
+    }
+}
+
+/// Describes a package url in the system with lockfile path
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct ParsedPurl {
+    pub purl: String,
+    pub lockfile_path: Option<String>,
+}
+
+impl TryFrom<&PackageDescriptor> for ParsedPurl {
+    type Error = purl::PackageError;
+
+    fn try_from(value: &PackageDescriptor) -> Result<Self, Self::Error> {
+        let package_type = purl::PackageType::from(value.package_type);
+        let purl = Purl::builder(package_type, &value.name)
+            .with_version(&value.version)
+            .build()?
+            .to_string();
+        Ok(ParsedPurl {
+            purl,
+            lockfile_path: None,
+        })
+    }
 }
 
 /// Basic core package meta data
