@@ -6,7 +6,6 @@ use std::fmt;
 use std::str::FromStr;
 
 use chrono::{DateTime, Utc};
-use purl::Purl;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -482,105 +481,54 @@ pub struct PackageDescriptor {
     pub package_type: PackageType,
 }
 
-/// Describes a package descriptor in the system with lockfile path
+/// `PackageDescriptorAndLockfilePath` represents a parsed package
+/// (`package_descriptor`) and the optional path to its lockfile
+/// (`lockfile_path`).
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
-pub struct LockFilePackageDescriptor {
+pub struct PackageDescriptorAndLockfilePath {
     pub package_descriptor: PackageDescriptor,
     pub lockfile_path: Option<String>,
 }
 
-impl From<&PackageDescriptor> for LockFilePackageDescriptor {
+impl From<&PackageDescriptor> for PackageDescriptorAndLockfilePath {
     fn from(value: &PackageDescriptor) -> Self {
-        LockFilePackageDescriptor {
+        PackageDescriptorAndLockfilePath {
             package_descriptor: value.clone(),
             lockfile_path: None,
         }
     }
 }
 
-/// Describes a package specifier in the system with lockfile path
+/// `PackageSpecifierAndLockfilePath` represents a parsed package
+/// (`package_specifier`) and the optional path to its lockfile
+/// (`lockfile_path`).
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
-pub struct LockFilePackageSpecifier {
+pub struct PackageSpecifierAndLockfilePath {
     pub package_specifier: PackageSpecifier,
     pub lockfile_path: Option<String>,
 }
 
-impl From<&PackageSpecifier> for LockFilePackageSpecifier {
+impl From<&PackageSpecifier> for PackageSpecifierAndLockfilePath {
     fn from(value: &PackageSpecifier) -> Self {
-        LockFilePackageSpecifier {
+        PackageSpecifierAndLockfilePath {
             package_specifier: value.clone(),
             lockfile_path: None,
         }
     }
 }
 
-/// Describes a package url in the system with lockfile path
+/// `PackageUrlAndLockfilePath` represents a parsed package URL (`purl`) and the
+/// optional path to its lockfile (`lockfile_path`).
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
-pub struct ParsedPurl {
+pub struct PackageUrlAndLockfilePath {
     pub purl: String,
     pub lockfile_path: Option<String>,
-}
-
-impl TryFrom<&PackageDescriptor> for ParsedPurl {
-    type Error = purl::PackageError;
-
-    fn try_from(value: &PackageDescriptor) -> Result<Self, Self::Error> {
-        let package_type = purl::PackageType::from(value.package_type);
-        let purl = Purl::builder(package_type, &value.name)
-            .with_version(&value.version)
-            .build()?
-            .to_string();
-        Ok(ParsedPurl {
-            purl,
-            lockfile_path: None,
-        })
-    }
-}
-
-impl TryFrom<&ParsedPurl> for PackageDescriptor {
-    type Error = purl::PackageError;
-
-    fn try_from(value: &ParsedPurl) -> Result<Self, Self::Error> {
-        let purl = Purl::from_str(&value.purl)?;
-        let package_type = PackageType::try_from(purl.package_type())?;
-
-        let package_name = match purl.namespace() {
-            Some(namespace) => {
-                let name = purl.name();
-                if package_type == PackageType::Maven {
-                    let ns = namespace.replace('/', ".");
-                    format!("{ns}:{name}")
-                } else {
-                    format!("{namespace}/{name}")
-                }
-            }
-            None => purl.name().into(),
-        };
-
-        let vcs_qualifier = purl.qualifiers().get("vcs_url");
-        let version = purl.version();
-
-        let package_version = match (version, vcs_qualifier) {
-            (Some(ver), _) => Ok(ver),
-            (None, Some(url)) => Ok(url),
-            _ => Err(purl::PackageError::MissingRequiredField(
-                purl::PurlField::Version,
-            )),
-        }?
-        .into();
-
-        Ok(PackageDescriptor {
-            name: package_name,
-            version: package_version,
-            package_type,
-        })
-    }
 }
 
 /// Basic core package meta data
