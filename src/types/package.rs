@@ -1,9 +1,9 @@
 //! Module containing data types reprsenting on-the-wire data for packages
 
+use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
-use std::{collections::HashMap, path::PathBuf};
 
 use chrono::{DateTime, Utc};
 use purl::Purl;
@@ -137,6 +137,23 @@ impl From<PackageType> for purl::PackageType {
             PackageType::Cargo => purl::PackageType::Cargo,
             PackageType::Golang => purl::PackageType::Golang,
         }
+    }
+}
+
+impl TryFrom<&purl::PackageType> for PackageType {
+    type Error = purl::UnsupportedPackageType;
+
+    fn try_from(value: &purl::PackageType) -> Result<PackageType, purl::UnsupportedPackageType> {
+        Ok(match value {
+            purl::PackageType::Cargo => PackageType::Cargo,
+            purl::PackageType::Gem => PackageType::RubyGems,
+            purl::PackageType::Golang => PackageType::Golang,
+            purl::PackageType::Maven => PackageType::Maven,
+            purl::PackageType::Npm => PackageType::Npm,
+            purl::PackageType::NuGet => PackageType::Nuget,
+            purl::PackageType::PyPI => PackageType::PyPi,
+            _ => return Err(purl::UnsupportedPackageType),
+        })
     }
 }
 
@@ -522,6 +539,46 @@ impl TryFrom<&PackageDescriptor> for ParsedPurl {
         Ok(ParsedPurl {
             purl,
             lockfile_path: None,
+        })
+    }
+}
+
+impl TryFrom<&ParsedPurl> for PackageDescriptor {
+    type Error = purl::PackageError;
+
+    fn try_from(value: &ParsedPurl) -> Result<Self, Self::Error> {
+        let purl = Purl::from_str(&value.purl)?;
+        let package_type = PackageType::try_from(purl.package_type())?;
+
+        let package_name = match purl.namespace() {
+            Some(namespace) => {
+                let name = purl.name();
+                if package_type == PackageType::Maven {
+                    let ns = namespace.replace('/', ".");
+                    format!("{ns}:{name}")
+                } else {
+                    format!("{namespace}/{name}")
+                }
+            }
+            None => purl.name().into(),
+        };
+
+        let vcs_qualifier = purl.qualifiers().get("vcs_url");
+        let version = purl.version();
+
+        let package_version = match (version, vcs_qualifier) {
+            (Some(ver), _) => Ok(ver),
+            (None, Some(url)) => Ok(url),
+            _ => Err(purl::PackageError::MissingRequiredField(
+                purl::PurlField::Version,
+            )),
+        }?
+        .into();
+
+        Ok(PackageDescriptor {
+            name: package_name,
+            version: package_version,
+            package_type,
         })
     }
 }
