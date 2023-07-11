@@ -140,10 +140,10 @@ impl From<PackageType> for purl::PackageType {
     }
 }
 
-impl TryFrom<&purl::PackageType> for PackageType {
+impl TryFrom<purl::PackageType> for PackageType {
     type Error = purl::UnsupportedPackageType;
 
-    fn try_from(value: &purl::PackageType) -> Result<PackageType, purl::UnsupportedPackageType> {
+    fn try_from(value: purl::PackageType) -> Result<PackageType, purl::UnsupportedPackageType> {
         Ok(match value {
             purl::PackageType::Cargo => PackageType::Cargo,
             purl::PackageType::Gem => PackageType::RubyGems,
