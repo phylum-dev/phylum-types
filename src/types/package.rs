@@ -132,6 +132,39 @@ impl fmt::Display for PackageType {
     }
 }
 
+impl From<PackageType> for purl::PackageType {
+    fn from(package_type: PackageType) -> purl::PackageType {
+        match package_type {
+            PackageType::Npm => purl::PackageType::Npm,
+            PackageType::PyPi => purl::PackageType::PyPI,
+            PackageType::Maven => purl::PackageType::Maven,
+            PackageType::RubyGems => purl::PackageType::Gem,
+            PackageType::Nuget => purl::PackageType::NuGet,
+            PackageType::Cargo => purl::PackageType::Cargo,
+            PackageType::Golang => purl::PackageType::Golang,
+        }
+    }
+}
+
+impl TryFrom<purl::PackageType> for PackageType {
+    type Error = purl::UnsupportedPackageType;
+
+    fn try_from(
+        package_type: purl::PackageType,
+    ) -> Result<PackageType, purl::UnsupportedPackageType> {
+        Ok(match package_type {
+            purl::PackageType::Cargo => PackageType::Cargo,
+            purl::PackageType::Gem => PackageType::RubyGems,
+            purl::PackageType::Golang => PackageType::Golang,
+            purl::PackageType::Maven => PackageType::Maven,
+            purl::PackageType::Npm => PackageType::Npm,
+            purl::PackageType::NuGet => PackageType::Nuget,
+            purl::PackageType::PyPI => PackageType::PyPi,
+            _ => return Err(purl::UnsupportedPackageType),
+        })
+    }
+}
+
 #[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct ScoredVersion {
     pub version: String,
@@ -448,6 +481,56 @@ pub struct PackageDescriptor {
     #[serde(rename = "type")]
     #[serde(alias = "registry")]
     pub package_type: PackageType,
+}
+
+/// `PackageDescriptorAndLockfilePath` represents a parsed package
+/// (`package_descriptor`) and the optional path to its lockfile
+/// (`lockfile_path`).
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct PackageDescriptorAndLockfilePath {
+    pub package_descriptor: PackageDescriptor,
+    pub lockfile_path: Option<String>,
+}
+
+impl From<&PackageDescriptor> for PackageDescriptorAndLockfilePath {
+    fn from(value: &PackageDescriptor) -> Self {
+        PackageDescriptorAndLockfilePath {
+            package_descriptor: value.clone(),
+            lockfile_path: None,
+        }
+    }
+}
+
+/// `PackageSpecifierAndLockfilePath` represents a parsed package
+/// (`package_specifier`) and the optional path to its lockfile
+/// (`lockfile_path`).
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct PackageSpecifierAndLockfilePath {
+    pub package_specifier: PackageSpecifier,
+    pub lockfile_path: Option<String>,
+}
+
+impl From<&PackageSpecifier> for PackageSpecifierAndLockfilePath {
+    fn from(value: &PackageSpecifier) -> Self {
+        PackageSpecifierAndLockfilePath {
+            package_specifier: value.clone(),
+            lockfile_path: None,
+        }
+    }
+}
+
+/// `PackageUrlAndLockfilePath` represents a parsed package (`purl`)
+/// and the optional path to its lockfile (`lockfile_path`).
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct PackageUrlAndLockfilePath {
+    pub purl: String,
+    pub lockfile_path: Option<String>,
 }
 
 /// Basic core package meta data

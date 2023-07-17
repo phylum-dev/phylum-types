@@ -5,7 +5,10 @@ use serde::{Deserialize, Serialize};
 
 use super::common::*;
 use super::project::*;
-use crate::types::package::{PackageDescriptor, PackageStatus, PackageStatusExtended};
+use crate::types::package::{
+    PackageDescriptorAndLockfilePath, PackageStatus, PackageStatusExtended,
+    PackageUrlAndLockfilePath,
+};
 
 /// When a job is completed, and some requirement is not met ( such as quality
 /// level ), what action should be taken?
@@ -29,7 +32,7 @@ pub struct JobDescriptor {
     pub label: String,
     pub num_dependencies: u32,
     pub score: f64,
-    pub packages: Vec<PackageDescriptor>,
+    pub packages: Vec<PackageDescriptorAndLockfilePath>,
     pub pass: bool,
     pub msg: String,
     pub date: String,
@@ -45,7 +48,7 @@ pub struct JobDescriptor {
 )]
 pub struct SubmitPackageRequest {
     /// The subpackage dependencies of this package
-    pub packages: Vec<PackageDescriptor>,
+    pub packages: Vec<PackageUrlAndLockfilePath>,
     /// Was this submitted by a user interactively and not a CI?
     pub is_user: bool,
     /// The id of the project this top level package should be associated with
