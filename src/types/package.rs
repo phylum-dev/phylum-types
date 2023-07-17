@@ -106,33 +106,6 @@ impl PackageType {
             PackageType::Golang => "Golang",
         }
     }
-
-    pub fn legacy_type_to_purl_type(package_type: PackageType) -> purl::PackageType {
-        match package_type {
-            PackageType::Npm => purl::PackageType::Npm,
-            PackageType::PyPi => purl::PackageType::PyPI,
-            PackageType::Maven => purl::PackageType::Maven,
-            PackageType::RubyGems => purl::PackageType::Gem,
-            PackageType::Nuget => purl::PackageType::NuGet,
-            PackageType::Cargo => purl::PackageType::Cargo,
-            PackageType::Golang => purl::PackageType::Golang,
-        }
-    }
-
-    pub fn try_legacy_type_from_purl_type(
-        package_type: purl::PackageType,
-    ) -> Result<PackageType, purl::UnsupportedPackageType> {
-        Ok(match package_type {
-            purl::PackageType::Cargo => PackageType::Cargo,
-            purl::PackageType::Gem => PackageType::RubyGems,
-            purl::PackageType::Golang => PackageType::Golang,
-            purl::PackageType::Maven => PackageType::Maven,
-            purl::PackageType::Npm => PackageType::Npm,
-            purl::PackageType::NuGet => PackageType::Nuget,
-            purl::PackageType::PyPI => PackageType::PyPi,
-            _ => return Err(purl::UnsupportedPackageType),
-        })
-    }
 }
 
 impl FromStr for PackageType {
@@ -156,6 +129,39 @@ impl fmt::Display for PackageType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let package_type = format!("{self:?}");
         write!(f, "{}", package_type.to_lowercase())
+    }
+}
+
+impl From<PackageType> for purl::PackageType {
+    fn from(package_type: PackageType) -> purl::PackageType {
+        match package_type {
+            PackageType::Npm => purl::PackageType::Npm,
+            PackageType::PyPi => purl::PackageType::PyPI,
+            PackageType::Maven => purl::PackageType::Maven,
+            PackageType::RubyGems => purl::PackageType::Gem,
+            PackageType::Nuget => purl::PackageType::NuGet,
+            PackageType::Cargo => purl::PackageType::Cargo,
+            PackageType::Golang => purl::PackageType::Golang,
+        }
+    }
+}
+
+impl TryFrom<purl::PackageType> for PackageType {
+    type Error = purl::UnsupportedPackageType;
+
+    fn try_from(
+        package_type: purl::PackageType,
+    ) -> Result<PackageType, purl::UnsupportedPackageType> {
+        Ok(match package_type {
+            purl::PackageType::Cargo => PackageType::Cargo,
+            purl::PackageType::Gem => PackageType::RubyGems,
+            purl::PackageType::Golang => PackageType::Golang,
+            purl::PackageType::Maven => PackageType::Maven,
+            purl::PackageType::Npm => PackageType::Npm,
+            purl::PackageType::NuGet => PackageType::Nuget,
+            purl::PackageType::PyPI => PackageType::PyPi,
+            _ => return Err(purl::UnsupportedPackageType),
+        })
     }
 }
 
