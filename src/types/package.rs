@@ -490,6 +490,7 @@ pub struct PackageDescriptor {
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
 pub struct PackageDescriptorAndLockfilePath {
+    #[serde(flatten)]
     pub package_descriptor: PackageDescriptor,
     pub lockfile_path: Option<String>,
 }
