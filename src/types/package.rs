@@ -492,6 +492,7 @@ pub struct PackageDescriptor {
 pub struct PackageDescriptorAndLockfilePath {
     #[serde(flatten)]
     pub package_descriptor: PackageDescriptor,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lockfile_path: Option<String>,
 }
 
