@@ -505,6 +505,15 @@ impl From<&PackageDescriptor> for PackageDescriptorAndLockfilePath {
     }
 }
 
+impl From<PackageDescriptor> for PackageDescriptorAndLockfilePath {
+    fn from(package_descriptor: PackageDescriptor) -> Self {
+        Self {
+            package_descriptor,
+            lockfile_path: None,
+        }
+    }
+}
+
 /// `PackageSpecifierAndLockfilePath` represents a parsed package
 /// (`package_specifier`) and the optional path to its lockfile
 /// (`lockfile_path`).
