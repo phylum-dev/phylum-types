@@ -483,65 +483,63 @@ pub struct PackageDescriptor {
     pub package_type: PackageType,
 }
 
-/// `PackageDescriptorAndLockfilePath` represents a parsed package
-/// (`package_descriptor`) and the optional path to its lockfile
-/// (`lockfile_path`).
+/// `PackageDescriptorAndLockfile` represents a parsed package
+/// (`package_descriptor`) and the optional path to its lockfile (`lockfile`).
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
-pub struct PackageDescriptorAndLockfilePath {
+pub struct PackageDescriptorAndLockfile {
     #[serde(flatten)]
     pub package_descriptor: PackageDescriptor,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub lockfile_path: Option<String>,
+    pub lockfile: Option<String>,
 }
 
-impl From<&PackageDescriptor> for PackageDescriptorAndLockfilePath {
+impl From<&PackageDescriptor> for PackageDescriptorAndLockfile {
     fn from(value: &PackageDescriptor) -> Self {
-        PackageDescriptorAndLockfilePath {
+        PackageDescriptorAndLockfile {
             package_descriptor: value.clone(),
-            lockfile_path: None,
+            lockfile: None,
         }
     }
 }
 
-impl From<PackageDescriptor> for PackageDescriptorAndLockfilePath {
+impl From<PackageDescriptor> for PackageDescriptorAndLockfile {
     fn from(package_descriptor: PackageDescriptor) -> Self {
         Self {
             package_descriptor,
-            lockfile_path: None,
+            lockfile: None,
         }
     }
 }
 
-/// `PackageSpecifierAndLockfilePath` represents a parsed package
-/// (`package_specifier`) and the optional path to its lockfile
-/// (`lockfile_path`).
+/// `PackageSpecifierAndLockfile` represents a parsed package
+/// (`package_specifier`) and the optional path to its lockfile (`lockfile`).
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
-pub struct PackageSpecifierAndLockfilePath {
+pub struct PackageSpecifierAndLockfile {
     pub package_specifier: PackageSpecifier,
-    pub lockfile_path: Option<String>,
+    pub lockfile: Option<String>,
 }
 
-impl From<&PackageSpecifier> for PackageSpecifierAndLockfilePath {
+impl From<&PackageSpecifier> for PackageSpecifierAndLockfile {
     fn from(value: &PackageSpecifier) -> Self {
-        PackageSpecifierAndLockfilePath {
+        PackageSpecifierAndLockfile {
             package_specifier: value.clone(),
-            lockfile_path: None,
+            lockfile: None,
         }
     }
 }
 
-/// `PackageUrlAndLockfilePath` represents a parsed package (`purl`)
-/// and the optional path to its lockfile (`lockfile_path`).
+/// `PackageUrlAndLockfile` represents a parsed package (`purl`)
+/// and the optional path to its lockfile (`lockfile`).
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
-pub struct PackageUrlAndLockfilePath {
+pub struct PackageUrlAndLockfile {
     pub purl: String,
-    pub lockfile_path: Option<String>,
+    pub lockfile: Option<String>,
 }
 
 /// Basic core package meta data
