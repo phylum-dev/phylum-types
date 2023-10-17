@@ -36,6 +36,8 @@ pub struct ProjectSummaryResponse {
     pub ecosystems: Vec<PackageType>,
     /// The project's group's name, if this is a group project
     pub group_name: Option<String>,
+    /// The project's repository location
+    pub repository_url: Option<String>,
 }
 
 /// A more detailed project response
