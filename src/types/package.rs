@@ -248,6 +248,19 @@ pub struct Issue {
     pub severity: RiskLevel,
     #[serde(alias = "risk_domain")]
     pub domain: RiskDomain,
+    pub vuln_info: Option<PackageVulnInfo>,
+}
+
+/// Additional package vuln info.
+#[derive(
+    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
+)]
+pub struct PackageVulnInfo {
+    pub recommendation: Option<String>,
+    pub cwe: Option<Vec<String>>,
+    pub cves: Option<Vec<String>>,
+    pub cvss: Option<String>,
+    pub references: Option<Vec<String>>,
 }
 
 /// Issue description.
