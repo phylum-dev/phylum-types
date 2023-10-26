@@ -4,7 +4,6 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::common::ProjectId;
-use super::job::*;
 use super::package::PackageType;
 
 /// Rick cut off thresholds for a project
@@ -38,22 +37,6 @@ pub struct ProjectSummaryResponse {
     pub group_name: Option<String>,
     /// The project's repository location
     pub repository_url: Option<String>,
-}
-
-/// A more detailed project response
-#[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
-pub struct ProjectDetailsResponse {
-    /// The project name
-    pub name: String,
-    /// The project id
-    pub id: String,
-    /// The project ecosystems / package types
-    #[serde(default)]
-    pub ecosystems: Vec<String>,
-    /// The configured risk cutoff thresholds for the project
-    pub thresholds: ProjectThresholds,
-    /// Most recent analysis job runs
-    pub jobs: Vec<JobDescriptor>,
 }
 
 /// Rquest to create a project
