@@ -6,6 +6,7 @@ use std::fmt;
 use std::str::FromStr;
 
 use chrono::{DateTime, Utc};
+use ordered_float::NotNan;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -248,6 +249,28 @@ pub struct Issue {
     pub severity: RiskLevel,
     #[serde(alias = "risk_domain")]
     pub domain: RiskDomain,
+    pub details: Option<IssueDetails>,
+}
+
+/// Extra information about the issue that depends on the type of issue.
+#[derive(
+    Clone, Debug, Deserialize, Eq, Hash, JsonSchema, Ord, PartialEq, PartialOrd, Serialize,
+)]
+#[serde(rename_all = "snake_case", tag = "type")]
+pub enum IssueDetails {
+    Vulnerability(VulnDetails),
+}
+
+#[derive(
+    Clone, Debug, Deserialize, Eq, Hash, JsonSchema, Ord, PartialEq, PartialOrd, Serialize,
+)]
+pub struct VulnDetails {
+    /// The CVE ids that this vuln is linked to.
+    pub cves: Vec<String>,
+    /// The CVSS score assigned to this vuln.
+    pub cvss: NotNan<f32>,
+    /// The CVSS vector string assigned to this vuln.
+    pub cvss_vector: String,
 }
 
 /// Issue description.
