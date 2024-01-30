@@ -567,7 +567,8 @@ pub struct PackageStatus {
     pub num_dependencies: u32,
     /// Number of vulnerabilities found in this package and all transitive
     /// dependencies
-    pub num_vulnerabilities: u32,
+    #[serde(default)]
+    pub num_vulnerabilities: Option<u32>,
 }
 
 /// Package metadata with extended info info
