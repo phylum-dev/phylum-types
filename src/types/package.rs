@@ -567,7 +567,7 @@ pub struct PackageStatus {
     pub num_dependencies: u32,
     /// Number of vulnerabilities found in this package and all transitive
     /// dependencies
-    #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub num_vulnerabilities: Option<u32>,
 }
 
