@@ -6,17 +6,6 @@ use serde::{Deserialize, Serialize};
 use super::common::ProjectId;
 use super::package::PackageType;
 
-/// Rick cut off thresholds for a project
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Serialize, Deserialize, JsonSchema)]
-pub struct ProjectThresholds {
-    pub author: f32,
-    pub engineering: f32,
-    pub license: f32,
-    pub malicious: f32,
-    pub total: f32,
-    pub vulnerability: f32,
-}
-
 /// Summary response for a project
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,

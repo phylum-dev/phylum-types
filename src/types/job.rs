@@ -4,22 +4,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::common::*;
-use super::project::*;
 use crate::types::package::{PackageDescriptorAndLockfile, PackageStatus, PackageStatusExtended};
-
-/// When a job is completed, and some requirement is not met ( such as quality
-/// level ), what action should be taken?
-/// In the case of the CLI, the value of this result is used to determine if the
-/// CLI should print a warning, or exit with a non-zero exit code.
-#[derive(
-    PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
-)]
-#[serde(rename_all = "lowercase")]
-pub enum Action {
-    None,
-    Warn,
-    Break,
-}
 
 /// Metadata about a job
 #[derive(PartialEq, PartialOrd, Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -104,8 +89,6 @@ pub struct JobStatusResponse<T> {
     pub score: f64,
     pub pass: bool,
     pub msg: String,
-    /// The action to take if the job fails
-    pub action: Action,
     #[serde(default)]
     /// Dependencies that have not completed processing
     pub num_incomplete: u32,
@@ -117,10 +100,6 @@ pub struct JobStatusResponse<T> {
     pub project_name: String,
     /// A label associated with this job, most often a branch name
     pub label: Option<String>,
-    /// The currently configured threshholds for this job. If the scores fall
-    /// below these thresholds, then the client should undertake the action
-    /// spelled out by the action field.
-    pub thresholds: ProjectThresholds,
     /// The packages that are a part of this job
     pub packages: Vec<T>,
 }
