@@ -13,7 +13,6 @@ pub struct JobDescriptor {
     pub project: String,
     pub label: String,
     pub num_dependencies: u32,
-    pub score: f64,
     pub packages: Vec<PackageDescriptorAndLockfile>,
     pub pass: bool,
     pub msg: String,
@@ -85,8 +84,6 @@ pub struct JobStatusResponse<T> {
     pub created_at: i64,
     /// The job status
     pub status: Status,
-    /// The current score
-    pub score: f64,
     pub pass: bool,
     pub msg: String,
     #[serde(default)]

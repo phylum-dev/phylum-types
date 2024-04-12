@@ -353,45 +353,6 @@ pub struct DeveloperResponsiveness {
     pub open_pull_request_avg_duration: Option<u32>,
 }
 
-/// Count of issues for each severity.
-#[derive(
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Copy,
-    Clone,
-    Debug,
-    Default,
-    Serialize,
-    Deserialize,
-    JsonSchema,
-)]
-#[serde(rename_all = "camelCase")]
-#[serde(default)]
-pub struct IssueImpacts {
-    pub low: u32,
-    pub medium: u32,
-    pub high: u32,
-    pub critical: u32,
-}
-
-impl From<&[Issue]> for IssueImpacts {
-    fn from(issues: &[Issue]) -> Self {
-        let mut impacts = IssueImpacts::default();
-        for issue in issues {
-            match issue.severity.score() {
-                score if score >= 0.8 => impacts.low += 1,
-                score if (0.5..0.8).contains(&score) => impacts.medium += 1,
-                score if (0.2..0.5).contains(&score) => impacts.high += 1,
-                _ => impacts.critical += 1,
-            }
-        }
-        impacts
-    }
-}
-
 #[derive(Deserialize, Serialize, PartialEq, Debug)]
 #[serde(tag = "status", content = "data")]
 pub enum PackageSubmitResponse {
@@ -424,7 +385,6 @@ pub struct Package {
     pub issues: Vec<IssuesListItem>,
     pub authors: Vec<Author>,
     pub developer_responsiveness: Option<DeveloperResponsiveness>,
-    pub issue_impacts: IssueImpacts,
     pub complete: bool,
     pub release_data: Option<PackageReleaseData>,
     pub repo_url: Option<String>,
