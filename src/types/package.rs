@@ -248,6 +248,8 @@ pub struct Issue {
     pub severity: RiskLevel,
     #[serde(alias = "risk_domain")]
     pub domain: RiskDomain,
+    #[serde(skip)]
+    pub rule: Option<String>,
 }
 
 /// Issue description.
