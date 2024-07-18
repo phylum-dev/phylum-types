@@ -263,7 +263,7 @@ pub struct IssuesListItem {
     pub title: String,
     pub tag: Option<String>,
     pub id: Option<String>,
-    pub ignored: IgnoredReason,
+    pub ignored: Option<String>,
 }
 
 #[derive(
@@ -305,29 +305,6 @@ impl fmt::Display for RiskType {
         };
         write!(f, "{risk_domain}")
     }
-}
-
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Default,
-    Deserialize,
-    Eq,
-    Hash,
-    JsonSchema,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    Serialize,
-)]
-#[serde(rename_all = "camelCase")]
-pub enum IgnoredReason {
-    #[default]
-    False,
-    FalsePositive,
-    NotRelevant,
-    Other,
 }
 
 /// Author information
@@ -562,5 +539,5 @@ pub struct IssueStatus {
     pub issue: Issue,
     /// The reason why the issue is ignored (if applicable).
     #[serde(default)]
-    pub ignored: IgnoredReason,
+    pub ignored: Option<String>,
 }

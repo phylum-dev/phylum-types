@@ -2,7 +2,6 @@ use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::types::package::IgnoredReason;
 use crate::types::user_settings::Threshold;
 
 #[derive(Debug, Default, Serialize, Deserialize, JsonSchema, Clone)]
@@ -44,5 +43,5 @@ pub struct RiskThresholds {
 pub struct IgnoredIssue {
     pub id: String,
     pub tag: String,
-    pub reason: IgnoredReason,
+    pub reason: String,
 }
