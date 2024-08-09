@@ -28,7 +28,7 @@ pub struct ProjectSummaryResponse {
     pub repository_url: Option<String>,
 }
 
-/// Rquest to create a project
+/// Request to create a project
 #[derive(
     PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Debug, Serialize, Deserialize, JsonSchema,
 )]
