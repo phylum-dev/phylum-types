@@ -161,7 +161,7 @@ pub struct TokenResponse {
     pub expires_in_seconds: u32,
 }
 
-/// Reprsents a refresh token response from a OAuth server after
+/// Represents a refresh token response from a OAuth server after
 /// a request was made to obtain a new Access Token using the current
 /// Refresh Token
 #[derive(

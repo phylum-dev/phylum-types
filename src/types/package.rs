@@ -1,4 +1,4 @@
-//! Module containing data types reprsenting on-the-wire data for packages
+//! Module containing data types representing on-the-wire data for packages
 
 use std::collections::HashMap;
 use std::convert::TryFrom;
