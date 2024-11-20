@@ -95,7 +95,19 @@ pub enum PackageType {
 }
 
 impl PackageType {
-    pub fn language(&self) -> &str {
+    pub fn id(&self) -> &'static str {
+        match self {
+            PackageType::Npm => "npm",
+            PackageType::PyPi => "pypi",
+            PackageType::Maven => "maven",
+            PackageType::RubyGems => "rubygems",
+            PackageType::Nuget => "nuget",
+            PackageType::Cargo => "cargo",
+            PackageType::Golang => "golang",
+        }
+    }
+
+    pub fn language(&self) -> &'static str {
         match self {
             PackageType::Npm => "Javascript",
             PackageType::RubyGems => "Ruby",
@@ -112,23 +124,29 @@ impl FromStr for PackageType {
     type Err = ();
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
-        match input.to_lowercase().as_str() {
-            "npm" => Ok(Self::Npm),
-            "python" | "pypi" => Ok(Self::PyPi),
-            "maven" | "maven-central" => Ok(Self::Maven),
-            "ruby" | "rubygems" | "gem" => Ok(Self::RubyGems),
-            "nuget" | "dotnet" => Ok(Self::Nuget),
-            "cargo" => Ok(Self::Cargo),
-            "golang" => Ok(Self::Golang),
-            _ => Err(()),
-        }
+        Ok(match input {
+            i if i.eq_ignore_ascii_case("npm") => Self::Npm,
+            i if i.eq_ignore_ascii_case("python") || i.eq_ignore_ascii_case("pypi") => Self::PyPi,
+            i if i.eq_ignore_ascii_case("maven") || i.eq_ignore_ascii_case("maven-central") => {
+                Self::Maven
+            }
+            i if i.eq_ignore_ascii_case("ruby")
+                || i.eq_ignore_ascii_case("rubygems")
+                || i.eq_ignore_ascii_case("gem") =>
+            {
+                Self::RubyGems
+            }
+            i if i.eq_ignore_ascii_case("nuget") || i.eq_ignore_ascii_case("dotnet") => Self::Nuget,
+            i if i.eq_ignore_ascii_case("cargo") => Self::Cargo,
+            i if i.eq_ignore_ascii_case("golang") => Self::Golang,
+            _ => return Err(()),
+        })
     }
 }
 
 impl fmt::Display for PackageType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let package_type = format!("{self:?}");
-        write!(f, "{}", package_type.to_lowercase())
+        write!(f, "{}", self.id())
     }
 }
 
