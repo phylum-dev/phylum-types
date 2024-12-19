@@ -522,10 +522,6 @@ pub struct PackageStatus {
     /// Number of dependencies
     // TODO Break out by type? dev / optional / core?
     pub num_dependencies: u32,
-    /// Number of vulnerabilities found in this package and all transitive
-    /// dependencies
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub num_vulnerabilities: Option<u32>,
 }
 
 /// Package metadata with extended info info
